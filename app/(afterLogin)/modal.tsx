@@ -1,9 +1,9 @@
 import {Text, View} from "react-native";
 
-export default function NotFoundScreen() {
+export default function Modal() {
   return (
     <View>
-      <Text>Not found</Text>
+      <Text>hoho</Text>
     </View>
   );
 }
