@@ -9,12 +9,18 @@ import SharedBtn from "@/components/shared/SharedBtn";
 import SharedLayoutCont from "@/components/shared/SharedLayoutCont";
 import SharedTxt from "@/components/shared/SharedTxt";
 import {dark, light} from "@/constants/Colors";
-import {InNout, Query} from "@/libs/__generated__/graphql";
+import {Query} from "@/libs/__generated__/graphql";
 import {COMPANY_INNOUT_FRAG} from "@/libs/fragments/inNoutFrag";
 import {IRouterParams} from "@/types/routerParamsType";
 import {DocumentNode, TypedDocumentNode, gql, useQuery} from "@apollo/client";
 import {router, useGlobalSearchParams} from "expo-router";
-import {SafeAreaView, TouchableOpacity, useColorScheme} from "react-native";
+import {useState} from "react";
+import {
+  RefreshControl,
+  SafeAreaView,
+  TouchableOpacity,
+  useColorScheme,
+} from "react-native";
 import {
   BarChart,
   PieChart,
@@ -36,14 +42,26 @@ const SEE_COMPANY_INNOUT = gql`
 ` as DocumentNode | TypedDocumentNode<Query>;
 
 export default function Page() {
+  //state
+  const [refresh, setRefresh] = useState(false);
   //hooks
   const theme = useColorScheme() === "dark";
   const {companyId} = useGlobalSearchParams<Partial<IRouterParams>>();
   //gql query
-  const {data, loading} = useQuery(SEE_COMPANY_INNOUT, {
+  const {data, loading, refetch} = useQuery(SEE_COMPANY_INNOUT, {
     variables: {searchCompanyId: Number(companyId)},
   });
   const inNoutData = data?.searchCompany;
+  //fn
+  const handleRefresh = async () => {
+    setRefresh(true);
+    try {
+      await refetch();
+    } catch (err) {
+      console.log(err);
+    }
+    setRefresh(false);
+  };
   // chart Data
   const pieData = [
     {
@@ -119,7 +137,7 @@ export default function Page() {
     <SharedLayoutCont loading={loading}>
       <SafeAreaView>
         <ChartCont>
-          <ChartHeader style={{borderBottomWidth: 2}}>
+          <ChartHeader>
             <TouchableOpacity
               onPress={() =>
                 router.push(`/${companyId}/inNoutInfo/detailInNout`)
@@ -127,14 +145,23 @@ export default function Page() {
             >
               <SharedTxt text="자산" size="40px" bold={700} />
             </TouchableOpacity>
-            <SharedBtn text="자산보기" width="20%" height="25%" />
+            <SharedBtn
+              text="자산보기"
+              width="20%"
+              onSubmit={() =>
+                router.push(`/${companyId}/inNoutInfo/detailInNout`)
+              }
+            />
           </ChartHeader>
           <ChartScroll
             contentContainerStyle={{
               alignItems: "center",
               gap: 20,
             }}
-            contentInset={{bottom: 250}}
+            contentInset={{bottom: 100}}
+            refreshControl={
+              <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
+            }
           >
             <ChartViewCont>
               <SharedTxt

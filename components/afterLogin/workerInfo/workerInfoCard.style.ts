@@ -1,6 +1,7 @@
 import styled from "styled-components/native";
 
 export const WorkerCont = styled.View`
+  flex: 1;
   gap: 20px;
 `;
 export const WorkerCardCont = styled.View`

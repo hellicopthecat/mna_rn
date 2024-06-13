@@ -13,22 +13,22 @@ const EXISTS_USER_QUERY = gql`
       username
       firstName
       lastName
+      avatar
     }
   }
 ` as DocumentNode | TypedDocumentNode<Query>;
 
 export default function useUser() {
   const {token, removeToken} = userToken();
-
   const {data, loading, error} = useQuery(EXISTS_USER_QUERY, {
     skip: !token,
   });
   useEffect(() => {
-    if (!data && !token && error !== undefined) {
+    if (!token && error !== undefined) {
       removeToken();
       router.replace("/");
     }
-  }, [data, token]);
+  }, [token, error]);
 
-  return {data, loading};
+  return {data, loading, error};
 }

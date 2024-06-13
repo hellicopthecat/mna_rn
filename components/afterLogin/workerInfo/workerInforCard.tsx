@@ -5,7 +5,6 @@ import {
   WorkerCardRight,
 } from "./workerInfoCard.style";
 import SharedTxt from "@/components/shared/SharedTxt";
-import SharedBtn from "@/components/shared/SharedBtn";
 import RowCont from "@/components/shared/RowCont";
 import Avatar from "@/components/shared/Avatar";
 
@@ -33,23 +32,18 @@ export default function WorkderInfoCard({item}: {item: User}) {
           <SharedTxt text={item.phone + ""} color="black" />
         </RowCont>
         {item.salary?.map((item) => (
-          <RowCont gap="10px">
+          <RowCont gap="10px" key={item?.id}>
             <SharedTxt text="연봉" color="black" />
             <SharedTxt
-              key={item?.id}
               text={`${item?.annualSalary?.toLocaleString()} 원`}
               color="black"
             />
           </RowCont>
         ))}
         {item.vacation?.map((item) => (
-          <RowCont gap="10px">
+          <RowCont gap="10px" key={item?.id}>
             <SharedTxt text="총 연차" color="black" />
-            <SharedTxt
-              key={item?.id}
-              text={`${item?.annual} 일`}
-              color="black"
-            />
+            <SharedTxt text={`${item?.annual} 일`} color="black" />
           </RowCont>
         ))}
       </WorkerCardRight>

@@ -1,5 +1,6 @@
 import styled from "styled-components/native";
 export const CompanyCardCont = styled.View`
+  flex: 1;
   gap: 20px;
 `;
 export const CompanyCard = styled.TouchableOpacity`
@@ -8,7 +9,6 @@ export const CompanyCard = styled.TouchableOpacity`
   border-radius: 20px;
   overflow: hidden;
   flex: 1;
-  margin: 5px;
 `;
 
 export const CardRight = styled.View`

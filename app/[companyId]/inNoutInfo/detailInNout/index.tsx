@@ -9,7 +9,8 @@ import {EQUITY_LIABILITIES_FRAG} from "@/libs/fragments/equityLiabilitiesFrag";
 import {IRouterParams} from "@/types/routerParamsType";
 import {DocumentNode, TypedDocumentNode, gql, useQuery} from "@apollo/client";
 import {useGlobalSearchParams} from "expo-router";
-import {ActivityIndicator, FlatList} from "react-native";
+import {useState} from "react";
+import {FlatList} from "react-native";
 const TOTAL_ASSETS_INNOUT = gql`
   query totalAssets($searchCompanyId: Int!) {
     searchCompany(id: $searchCompanyId) {
@@ -24,18 +25,15 @@ const TOTAL_ASSETS_INNOUT = gql`
   ${EQUITY_LIABILITIES_FRAG}
 ` as DocumentNode | TypedDocumentNode<Query>;
 export default function Page() {
+  const [refresh, setRefresh] = useState(false);
   const {companyId} = useGlobalSearchParams<Partial<IRouterParams>>();
-  const {data, loading} = useQuery(TOTAL_ASSETS_INNOUT, {
+  const {data, loading, refetch, fetchMore} = useQuery(TOTAL_ASSETS_INNOUT, {
     variables: {searchCompanyId: Number(companyId)},
   });
   const companyInNout = data?.searchCompany?.companyInNout;
 
-  if (loading) {
-    return <ActivityIndicator />;
-  }
-
   return (
-    <SharedLayoutCont>
+    <SharedLayoutCont loading={loading}>
       <AssetCardCont>
         <RowCont gap="10px" content="space-between">
           <SharedTxt text="총 자산액" size="20px" bold={700} />
@@ -45,7 +43,7 @@ export default function Page() {
         </RowCont>
         <FlatList
           data={companyInNout?.totalAssetsDesc as EquityLiabilities[]}
-          keyExtractor={(item: EquityLiabilities) => item.id + ""}
+          keyExtractor={(item: EquityLiabilities) => item.id.toString()}
           renderItem={({item}: {item: EquityLiabilities}) => (
             <AssetCard item={item} />
           )}

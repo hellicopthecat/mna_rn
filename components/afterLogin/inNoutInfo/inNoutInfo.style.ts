@@ -1,7 +1,7 @@
 import styled from "styled-components/native";
 
 export const ChartCont = styled.View`
-  gap: 20px;
+  gap: 30px;
 `;
 export const ChartHeader = styled.View`
   flex-direction: row;

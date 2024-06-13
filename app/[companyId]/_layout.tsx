@@ -20,8 +20,11 @@ import SharedTxt from "@/components/shared/SharedTxt";
 import useUser from "@/hooks/useUser";
 import SharedBtn from "@/components/shared/SharedBtn";
 import userToken from "@/store/userToken";
+import {router, useGlobalSearchParams} from "expo-router";
+import {IRouterParams} from "@/types/routerParamsType";
 
 export default function DetailCompanyLayout() {
+  const {companyId} = useGlobalSearchParams<Partial<IRouterParams>>();
   const theme = useColorScheme() === "dark";
   const {data: user} = useUser();
   const {removeToken} = userToken();
@@ -63,12 +66,8 @@ export default function DetailCompanyLayout() {
             />
             <DrawerItemList {...props} />
             <DrawerItem
-              label={() => (
-                <SharedBtn text="로그아웃" onSubmit={() => removeToken()} />
-              )}
-              onPress={() => {
-                console.log("hohdo");
-              }}
+              label={() => <SharedBtn text="로그아웃" />}
+              onPress={() => removeToken()}
               style={{
                 width: "100%",
                 height: "110%",
@@ -80,7 +79,18 @@ export default function DetailCompanyLayout() {
       >
         <Drawer.Screen
           name="inNoutInfo"
-          options={{headerTitle: "자산", drawerLabel: "자산"}}
+          options={{
+            headerTitle: "자산",
+            drawerLabel({color}) {
+              return (
+                <TouchableOpacity
+                  onPress={() => router.replace(`/${companyId}/inNoutInfo`)}
+                >
+                  <Text style={{color}}>자산</Text>
+                </TouchableOpacity>
+              );
+            },
+          }}
         />
         <Drawer.Screen
           name="workers"

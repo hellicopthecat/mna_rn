@@ -20,6 +20,7 @@ const Txt = styled.Text<ISharedTxtStyle>`
   font-size: ${(props) => props.$size};
   font-weight: ${(props) => props.$bold};
   text-align: ${(props) => props.$align};
+  white-space: nowrap;
 `;
 
 export default function SharedTxt({

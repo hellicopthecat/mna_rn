@@ -7,7 +7,6 @@ import {Ionicons} from "@expo/vector-icons";
 export default function AfterLoginLayout() {
   const theme = useColorScheme() === "dark";
   const {data} = useUser();
-
   return (
     <Tabs
       screenOptions={{
@@ -24,6 +23,7 @@ export default function AfterLoginLayout() {
         name="myCompany"
         options={{
           headerTitle: data?.seeMyprofile.username,
+          tabBarLabel: "나의 회사",
           tabBarIcon({color, focused, size}) {
             return focused ? (
               <Ionicons name="home" size={size} color={color} />
@@ -37,6 +37,7 @@ export default function AfterLoginLayout() {
         name="mypage"
         options={{
           headerTitle: data?.seeMyprofile.username,
+          tabBarLabel: "마이페이지",
           tabBarIcon({color, focused, size}) {
             return focused ? (
               <Ionicons name="person" size={size} color={color} />

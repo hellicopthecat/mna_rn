@@ -39,11 +39,9 @@ export default function Page() {
     variables: {searchCompanyId: Number(companyId)},
   });
   const worker = data?.searchCompany?.companyWorker;
-  if (loading) {
-    return <ActivityIndicator />;
-  }
+
   return (
-    <SharedLayoutCont>
+    <SharedLayoutCont loading={loading}>
       <WorkerCont>
         <RowCont content="space-between">
           <TouchableOpacity>
@@ -53,8 +51,8 @@ export default function Page() {
         </RowCont>
         <FlatList
           data={worker as User[]}
-          keyExtractor={(item) => item.id + ""}
-          renderItem={({item}: {item: User}) => <WorkderInfoCard item={item} />}
+          keyExtractor={(item) => item.id}
+          renderItem={({item}) => <WorkderInfoCard item={item} />}
           ItemSeparatorComponent={() => <FlatSeparator />}
           contentInset={{bottom: 50}}
         />
