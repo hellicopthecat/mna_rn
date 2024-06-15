@@ -9,10 +9,22 @@ import {setContext} from "@apollo/client/link/context";
 import {onError} from "@apollo/client/link/error";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const cache = new InMemoryCache();
+const cache = new InMemoryCache({
+  typePolicies: {
+    Query: {
+      fields: {
+        searchCompany: {
+          merge(existing, incoming) {
+            return {...existing, ...incoming};
+          },
+        },
+      },
+    },
+  },
+});
 
 const httpLink = new HttpLink({
-  uri: "https://8a6f-58-227-141-22.ngrok-free.app/graphql",
+  uri: "https://5ef9-58-227-141-22.ngrok-free.app/graphql",
 });
 const authLink = setContext(async (_, {headers}) => {
   const token = await AsyncStorage.getItem(TOKEN);

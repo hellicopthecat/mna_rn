@@ -1,6 +1,11 @@
 import {dark, light} from "@/constants/Colors";
 import {Noop} from "react-hook-form";
-import {ReturnKeyTypeOptions, TextInput, useColorScheme} from "react-native";
+import {
+  KeyboardTypeOptions,
+  ReturnKeyTypeOptions,
+  TextInput,
+  useColorScheme,
+} from "react-native";
 import styled from "styled-components/native";
 interface ISharedInput {
   onBlur: Noop;
@@ -10,6 +15,8 @@ interface ISharedInput {
   returnkey?: ReturnKeyTypeOptions;
   onSubmit?: () => void;
   refName?: React.MutableRefObject<null>;
+  secure?: boolean;
+  keyboardType?: KeyboardTypeOptions;
 }
 const Input = styled(TextInput)`
   width: 100%;
@@ -26,6 +33,8 @@ export default function SharedInput({
   returnkey = "default",
   onSubmit,
   refName,
+  secure = false,
+  keyboardType = "default",
 }: ISharedInput) {
   const theme = useColorScheme() === "dark";
   return (
@@ -34,8 +43,11 @@ export default function SharedInput({
       onBlur={onBlur}
       onChangeText={onChangeText}
       defaultValue={value}
-      placeholder={placeholder}
       autoCapitalize="none"
+      autoComplete="off"
+      secureTextEntry={secure}
+      keyboardType={keyboardType}
+      placeholder={placeholder}
       placeholderTextColor={theme ? "white" : "black"}
       style={{
         borderBottomColor: theme ? dark.secondary : light.secondary,

@@ -18,7 +18,7 @@ const AvatarCont = styled.View<IAvatarStyleProps>`
 export default function Avatar({
   width = "50px",
   height = "50px",
-  radius = "100%",
+  radius = "50px",
 }: IAvatarProps) {
   return <AvatarCont $width={width} $height={height} $radius={radius} />;
 }

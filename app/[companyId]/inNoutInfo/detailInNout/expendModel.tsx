@@ -15,7 +15,7 @@ import {FlatList, TouchableOpacity} from "react-native-gesture-handler";
 const EXPEND_MODEL = gql`
   query expendModel($searchCompanyId: Int!) {
     searchCompany(id: $searchCompanyId) {
-      companyInNout {
+      inNout {
         expendMoney
         expendModel {
           ...IncomeExpendFrag
@@ -35,14 +35,12 @@ export default function Page() {
   const {data, loading} = useQuery(EXPEND_MODEL, {
     variables: {searchCompanyId: Number(companyId)},
   });
-  const inNout = data?.searchCompany?.companyInNout;
-  const paidIncome = data?.searchCompany?.companyInNout.expendModel;
-  const waitIncome = data?.searchCompany?.companyInNout.waitExpendModel;
-  if (loading) {
-    return <ActivityIndicator />;
-  }
+  const inNout = data?.searchCompany?.inNout;
+  const paidIncome = data?.searchCompany?.inNout.expendModel;
+  const waitIncome = data?.searchCompany?.inNout.waitExpendModel;
+
   return (
-    <SharedLayoutCont>
+    <SharedLayoutCont loading={loading}>
       <INECont>
         <RowCont content="space-around">
           <TouchableOpacity onPress={() => setPay(true)}>

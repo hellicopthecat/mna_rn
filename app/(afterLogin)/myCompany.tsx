@@ -40,7 +40,7 @@ const MY_COMPANY_QUERY = gql`
         companyName
         isOwned
         isManager
-        companyInNout {
+        inNout {
           totalAssets
         }
         companyWorker {
@@ -90,7 +90,7 @@ export default function Page() {
         <CardLeft>
           <SharedTxt
             text={item.companyName}
-            size={item.companyName.length <= 6 ? "50px" : "30px"}
+            size={item.companyName.length <= 6 ? "40px" : "30px"}
             bold={700}
             color="black"
           />
@@ -99,9 +99,9 @@ export default function Page() {
               <SharedTxt text={"자산"} size="18px" color="black" />
               <SharedTxt
                 text={
-                  !item.companyInNout.totalAssets
+                  !item.inNout.totalAssets
                     ? "0 원"
-                    : `${item.companyInNout.totalAssets.toLocaleString()} 원`
+                    : `${item.inNout.totalAssets.toLocaleString()} 원`
                 }
                 color="black"
                 align="right"

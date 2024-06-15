@@ -45,6 +45,7 @@ export default function useCreateCompanyHook() {
               },
               ownCompany(prev, {toReference}) {
                 const newData = {
+                  __typename: "Company",
                   id: data?.createCompany.id + "",
                   companyName,
                   isOwned: true,
@@ -55,7 +56,8 @@ export default function useCreateCompanyHook() {
                   },
                   companyWorker: [{id: userData?.seeMyprofile.id}],
                 };
-                return [...prev, newData];
+                const newCompany = toReference(newData, true);
+                return [...prev, newCompany];
               },
             },
           });

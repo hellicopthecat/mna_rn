@@ -35,7 +35,7 @@ export default function useLoginHook() {
           Alert.alert("로그인 실패", data.loginUser.errorMsg + "");
         } else {
           setToken(data.loginUser.token + "");
-          router.replace("/myCompany");
+          router.replace("/mypage");
         }
       },
     });

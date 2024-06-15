@@ -47,14 +47,10 @@ export default function DetailCompanyLayout() {
             <DrawerItem
               label={() => (
                 <RowCont gap="20px">
-                  <TouchableOpacity
-                    onPress={() => props.navigation.navigate(`mypage`)}
-                  >
+                  <TouchableOpacity onPress={() => router.replace(`/mypage`)}>
                     <Avatar />
                   </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => props.navigation.navigate(`mypage`)}
-                  >
+                  <TouchableOpacity onPress={() => router.replace(`/mypage`)}>
                     <SharedTxt text={user?.seeMyprofile.username + ""} />
                   </TouchableOpacity>
                 </RowCont>

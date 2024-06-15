@@ -1,7 +1,9 @@
 import AssetCard from "@/components/afterLogin/inNoutInfo/detailInNout/AssetCard";
 import {AssetCardCont} from "@/components/afterLogin/inNoutInfo/detailInNout/AssetCardCont.style";
+import CreateAssetModal from "@/components/afterLogin/inNoutInfo/detailInNout/createAssetModal/createAssetModal";
 import FlatSeparator from "@/components/shared/FlatSeparator";
 import RowCont from "@/components/shared/RowCont";
+import SharedBtn from "@/components/shared/SharedBtn";
 import SharedLayoutCont from "@/components/shared/SharedLayoutCont";
 import SharedTxt from "@/components/shared/SharedTxt";
 import {EquityLiabilities, Query} from "@/libs/__generated__/graphql";
@@ -16,7 +18,7 @@ import {TouchableOpacity} from "react-native-gesture-handler";
 const CURRENT_ASSETS_INNOUT = gql`
   query currentAssets($searchCompanyId: Int!) {
     searchCompany(id: $searchCompanyId) {
-      companyInNout {
+      inNout {
         currentAssets
         currentAssetsDesc {
           ...EquityLiabilitiesFrag
@@ -31,21 +33,30 @@ const CURRENT_ASSETS_INNOUT = gql`
   ${EQUITY_LIABILITIES_FRAG}
 ` as DocumentNode | TypedDocumentNode<Query>;
 export default function Page() {
+  const [refresh, setRefresh] = useState(false);
+  const [modal, setModal] = useState(false);
   const [current, setCurrent] = useState(true);
   const {companyId} = useGlobalSearchParams<Partial<IRouterParams>>();
-  const {data, loading} = useQuery(CURRENT_ASSETS_INNOUT, {
+  const {data, loading, refetch} = useQuery(CURRENT_ASSETS_INNOUT, {
     variables: {searchCompanyId: Number(companyId)},
   });
 
-  const inNout = data?.searchCompany?.companyInNout;
-  const currentAsset = data?.searchCompany?.companyInNout.currentAssetsDesc;
-  const nonCurrentAsset =
-    data?.searchCompany?.companyInNout.nonCurrentAssetsDesc;
-  if (loading) {
-    return <ActivityIndicator />;
-  }
+  const inNout = data?.searchCompany?.inNout;
+  const currentAsset = data?.searchCompany?.inNout.currentAssetsDesc;
+  const nonCurrentAsset = data?.searchCompany?.inNout.nonCurrentAssetsDesc;
+  //fn
+  const handleRefresh = async () => {
+    setRefresh(true);
+    try {
+      await refetch();
+    } catch (err) {
+      console.log(err);
+    }
+    setRefresh(false);
+  };
+
   return (
-    <SharedLayoutCont>
+    <SharedLayoutCont loading={loading}>
       <AssetCardCont>
         <RowCont content="space-around">
           <TouchableOpacity
@@ -61,6 +72,7 @@ export default function Page() {
             <SharedTxt text="부동자산" size="25px" bold={700} />
           </TouchableOpacity>
         </RowCont>
+        <SharedBtn text="자산생성" onSubmit={() => setModal((prev) => !prev)} />
         {current && (
           <>
             <RowCont gap="10px" content="space-between">
@@ -78,6 +90,8 @@ export default function Page() {
                 <AssetCard item={item} />
               )}
               ItemSeparatorComponent={() => <FlatSeparator />}
+              refreshing={refresh}
+              onRefresh={handleRefresh}
             />
           </>
         )}
@@ -98,10 +112,19 @@ export default function Page() {
                 <AssetCard item={item} />
               )}
               ItemSeparatorComponent={() => <FlatSeparator />}
+              refreshing={refresh}
+              onRefresh={handleRefresh}
             />
           </>
         )}
       </AssetCardCont>
+      {modal && (
+        <CreateAssetModal
+          visible={modal}
+          close={setModal}
+          inNoutId={inNout?.id + ""}
+        />
+      )}
     </SharedLayoutCont>
   );
 }

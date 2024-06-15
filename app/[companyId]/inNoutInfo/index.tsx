@@ -33,7 +33,7 @@ const SEE_COMPANY_INNOUT = gql`
     searchCompany(id: $searchCompanyId) {
       id
       companyName
-      companyInNout {
+      inNout {
         ...CompanyInNoutFrag
       }
     }
@@ -65,69 +65,69 @@ export default function Page() {
   // chart Data
   const pieData = [
     {
-      value: inNoutData?.companyInNout.capital,
+      value: inNoutData?.inNout.capital,
       color: theme ? dark.secondary : light.secondary,
-      text: `${inNoutData?.companyInNout.capital.toLocaleString()}`,
+      text: `${inNoutData?.inNout.capital.toLocaleString()}`,
     },
     {
-      value: inNoutData?.companyInNout.liabilities,
+      value: inNoutData?.inNout.liabilities,
       color: theme ? dark.primary : light.primary,
-      text: `${inNoutData?.companyInNout.liabilities.toLocaleString()}`,
+      text: `${inNoutData?.inNout.liabilities.toLocaleString()}`,
     },
   ];
   const barData = [
     {
-      value: !inNoutData?.companyInNout.debtRatio
+      value: !inNoutData?.inNout.debtRatio
         ? 0
-        : Number(inNoutData?.companyInNout.debtRatio.toFixed(1)),
+        : Number(inNoutData?.inNout.debtRatio.toFixed(1)),
       label: "부채비율",
       frontColor: "#f200ff",
     },
     {
-      value: !inNoutData?.companyInNout.profitMargin
+      value: !inNoutData?.inNout.profitMargin
         ? 0
-        : Number(inNoutData?.companyInNout.profitMargin.toFixed(1)),
+        : Number(inNoutData?.inNout.profitMargin.toFixed(1)),
       label: "이익률",
       frontColor: "#e1ff00",
     },
     {
-      value: !inNoutData?.companyInNout.equityRatio
+      value: !inNoutData?.inNout.equityRatio
         ? 0
-        : Number(inNoutData?.companyInNout.equityRatio.toFixed(1)),
+        : Number(inNoutData?.inNout.equityRatio.toFixed(1)),
       label: "자기자본비율",
       frontColor: "#00ffb3",
     },
     {
-      value: !inNoutData?.companyInNout.roe
+      value: !inNoutData?.inNout.roe
         ? 0
-        : Number(inNoutData?.companyInNout.roe.toFixed(1)),
+        : Number(inNoutData?.inNout.roe.toFixed(1)),
       label: "자기자본회수기간",
       frontColor: "#2a00fe",
     },
   ];
   const horizontalData = [
     {
-      value: inNoutData?.companyInNout.totalRevenue,
+      value: inNoutData?.inNout.totalRevenue,
       label: "총수익",
       frontColor: "#fa0000",
     },
     {
-      value: inNoutData?.companyInNout.netAssets,
+      value: inNoutData?.inNout.netAssets,
       label: "순자산",
       frontColor: "#e5ff00",
     },
     {
-      value: inNoutData?.companyInNout.netIncome,
+      value: inNoutData?.inNout.netIncome,
       label: "순이익",
       frontColor: "#0011ff",
     },
     {
-      value: inNoutData?.companyInNout.totalExpenses,
+      value: inNoutData?.inNout.totalExpenses,
       label: "총비용",
       frontColor: "#ff00f2",
     },
     {
-      value: inNoutData?.companyInNout.budget,
+      value: inNoutData?.inNout.budget,
       label: "예산",
       frontColor: "#00ff0d",
     },
@@ -191,7 +191,7 @@ export default function Page() {
                         <SharedTxt bold={700} text={`총 자산`} align="center" />
                         <SharedTxt
                           bold={700}
-                          text={`${inNoutData?.companyInNout.totalAssets}`}
+                          text={`${inNoutData?.inNout.totalAssets}`}
                         />
                       </>
                     );

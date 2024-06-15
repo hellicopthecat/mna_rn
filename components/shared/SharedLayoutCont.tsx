@@ -1,5 +1,5 @@
 import {ReactNode} from "react";
-import {ActivityIndicator} from "react-native";
+import {ActivityIndicator, SafeAreaView} from "react-native";
 import styled from "styled-components/native";
 
 interface ISharedLayoutProps {

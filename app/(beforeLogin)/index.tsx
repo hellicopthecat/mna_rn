@@ -76,6 +76,7 @@ export default function Page() {
                 value={value}
                 placeholder="비밀번호"
                 returnkey="next"
+                secure
                 onSubmit={handleSubmit(onSubmit)}
               />
             )}

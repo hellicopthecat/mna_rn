@@ -2,6 +2,7 @@ import IncomeExpendCard from "@/components/afterLogin/inNoutInfo/detailInNout/in
 import {INECont} from "@/components/afterLogin/inNoutInfo/detailInNout/incomeExpendCard.style";
 import FlatSeparator from "@/components/shared/FlatSeparator";
 import RowCont from "@/components/shared/RowCont";
+import SharedBtn from "@/components/shared/SharedBtn";
 import SharedLayoutCont from "@/components/shared/SharedLayoutCont";
 import SharedTxt from "@/components/shared/SharedTxt";
 import {IncomeExpend, Query} from "@/libs/__generated__/graphql";
@@ -14,9 +15,9 @@ import {DocumentNode} from "graphql";
 import {useState} from "react";
 import {ActivityIndicator, FlatList, TouchableOpacity} from "react-native";
 const INCOME_MODEL = gql`
-  query totalAssets($searchCompanyId: Int!) {
+  query incomeModels($searchCompanyId: Int!) {
     searchCompany(id: $searchCompanyId) {
-      companyInNout {
+      inNout {
         incomeMoney
         incomeModel {
           ...IncomeExpendFrag
@@ -38,14 +39,12 @@ export default function Page() {
   const {data, loading} = useQuery(INCOME_MODEL, {
     variables: {searchCompanyId: Number(companyId)},
   });
-  const inNout = data?.searchCompany?.companyInNout;
-  const paidIncome = data?.searchCompany?.companyInNout.incomeModel;
-  const waitIncome = data?.searchCompany?.companyInNout.waitIncomeModel;
-  if (loading) {
-    return <ActivityIndicator />;
-  }
+  const inNout = data?.searchCompany?.inNout;
+  const paidIncome = data?.searchCompany?.inNout.incomeModel;
+  const waitIncome = data?.searchCompany?.inNout.waitIncomeModel;
+
   return (
-    <SharedLayoutCont>
+    <SharedLayoutCont loading={loading}>
       <INECont>
         <RowCont content="space-around">
           <TouchableOpacity onPress={() => setPay(true)}>
@@ -65,6 +64,7 @@ export default function Page() {
             />
           </TouchableOpacity>
         </RowCont>
+        <SharedBtn text="수입모델작성" />
         {pay && (
           <>
             <RowCont content="space-between">

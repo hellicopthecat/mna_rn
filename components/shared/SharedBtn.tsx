@@ -6,6 +6,7 @@ interface ISharedBtnProps {
   size?: string;
   bold?: number;
   onSubmit?: () => void;
+  disable?: boolean;
 }
 
 interface ITouchProps {
@@ -38,10 +39,11 @@ export default function SharedBtn({
   size = "15px",
   bold = 600,
   onSubmit,
+  disable = false,
 }: ISharedBtnProps) {
   return (
     <TouchableBtn onPress={onSubmit} $width={width} $height={height}>
-      <BtnText $size={size} $bold={bold}>
+      <BtnText $size={size} $bold={bold} disabled={disable}>
         {text}
       </BtnText>
     </TouchableBtn>

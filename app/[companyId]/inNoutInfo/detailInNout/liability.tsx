@@ -1,7 +1,9 @@
 import AssetCard from "@/components/afterLogin/inNoutInfo/detailInNout/AssetCard";
 import {AssetCardCont} from "@/components/afterLogin/inNoutInfo/detailInNout/AssetCardCont.style";
+import CreateAssetModal from "@/components/afterLogin/inNoutInfo/detailInNout/createAssetModal/createAssetModal";
 import FlatSeparator from "@/components/shared/FlatSeparator";
 import RowCont from "@/components/shared/RowCont";
+import SharedBtn from "@/components/shared/SharedBtn";
 import SharedLayoutCont from "@/components/shared/SharedLayoutCont";
 import SharedTxt from "@/components/shared/SharedTxt";
 import {EquityLiabilities, Query} from "@/libs/__generated__/graphql";
@@ -15,9 +17,9 @@ import {useState} from "react";
 import {ActivityIndicator, FlatList} from "react-native";
 import {TouchableOpacity} from "react-native-gesture-handler";
 const CURRENT_LIABILITY_INNOUT = gql`
-  query totalAssets($searchCompanyId: Int!) {
+  query currentLiability($searchCompanyId: Int!) {
     searchCompany(id: $searchCompanyId) {
-      companyInNout {
+      inNout {
         currentLiabilities
         currentLiabilitiesDesc {
           ...EquityLiabilitiesFrag
@@ -33,21 +35,18 @@ const CURRENT_LIABILITY_INNOUT = gql`
   ${EQUITY_LIABILITIES_FRAG}
 ` as DocumentNode | TypedDocumentNode<Query>;
 export default function Page() {
+  const [modal, setModal] = useState(false);
   const [current, setCurrent] = useState(true);
   const {companyId} = useGlobalSearchParams<Partial<IRouterParams>>();
   const {data, loading} = useQuery(CURRENT_LIABILITY_INNOUT, {
     variables: {searchCompanyId: Number(companyId)},
   });
-  if (loading) {
-    return <ActivityIndicator />;
-  }
-  const inNout = data?.searchCompany?.companyInNout;
-  const currentLiability =
-    data?.searchCompany?.companyInNout.currentLiabilitiesDesc;
+  const inNout = data?.searchCompany?.inNout;
+  const currentLiability = data?.searchCompany?.inNout.currentLiabilitiesDesc;
   const nonCurrentLiability =
-    data?.searchCompany?.companyInNout.nonCurrentLiabilitiesDesc;
+    data?.searchCompany?.inNout.nonCurrentLiabilitiesDesc;
   return (
-    <SharedLayoutCont>
+    <SharedLayoutCont loading={loading}>
       <AssetCardCont>
         <RowCont content="space-around">
           <TouchableOpacity
@@ -63,6 +62,7 @@ export default function Page() {
             <SharedTxt text="부동부채" size="25px" bold={700} />
           </TouchableOpacity>
         </RowCont>
+        <SharedBtn text="자산생성" onSubmit={() => setModal((prev) => !prev)} />
         {current && (
           <>
             <RowCont gap="10px" content="space-between">
@@ -104,6 +104,13 @@ export default function Page() {
           </>
         )}
       </AssetCardCont>
+      {modal && (
+        <CreateAssetModal
+          visible={modal}
+          close={setModal}
+          inNoutId={inNout?.id + ""}
+        />
+      )}
     </SharedLayoutCont>
   );
 }
