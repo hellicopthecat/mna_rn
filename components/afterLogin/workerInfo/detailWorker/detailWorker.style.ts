@@ -17,9 +17,3 @@ export const WorkerInfoDesc = styled.View`
   gap: 5px;
   padding: 15px;
 `;
-export const WorkerVacationCont = styled.View`
-  background-color: white;
-  gap: 10px;
-  border-radius: 25px;
-  overflow: hidden;
-`;
