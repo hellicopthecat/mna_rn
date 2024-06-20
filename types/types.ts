@@ -1,3 +1,5 @@
+import {TPaymentSwitch} from "@/libs/__generated__/graphql";
+
 export interface ILoginProps {
   username?: string;
   email?: string;
@@ -42,4 +44,45 @@ export interface IEditAssetProps {
   current?: boolean;
   assests?: boolean;
   value?: number;
+}
+export interface ICreateInExProps {
+  inNoutId: number;
+  incomeTrue: boolean;
+  infoSubtitle: string;
+  money: number;
+  businessDate: string;
+  paymentType: string;
+  accountCode: string;
+  businessDesc: string;
+  paymentsDone: TPaymentSwitch;
+  enLName: string;
+  enLType: string;
+  enLDesc: string;
+  current: boolean;
+  assests: boolean;
+}
+
+export interface ICreateProductProps {
+  inNoutId?: string;
+  createProductId?: number;
+  itemProductId: string;
+  itemName: string;
+  itemModelName?: string;
+  itemPhoto?: string;
+  itemType?: string;
+  itemPrice?: number;
+  itemCount?: number;
+  itemDesc?: string;
+  incomeTrue?: boolean;
+  paymentType?: string;
+  accountCode?: string;
+  businessDesc?: string;
+  paymentsDone?: TPaymentSwitch;
+}
+
+export interface IRegistWorker {
+  username: string;
+  childCount: number;
+  familyCount: number;
+  preTaxMonthlySalary: number;
 }

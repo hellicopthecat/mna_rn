@@ -1,21 +1,26 @@
+import CreateInExModal from "@/components/afterLogin/inNoutInfo/detailInNout/createInExModal";
+import CreateProductModal from "@/components/afterLogin/inNoutInfo/detailInNout/createProductModal/createProductModal";
 import IncomeExpendCard from "@/components/afterLogin/inNoutInfo/detailInNout/incomeExpendCard";
 import {INECont} from "@/components/afterLogin/inNoutInfo/detailInNout/incomeExpendCard.style";
 import FlatSeparator from "@/components/shared/FlatSeparator";
 import RowCont from "@/components/shared/RowCont";
+import SharedBtn from "@/components/shared/SharedBtn";
 import SharedLayoutCont from "@/components/shared/SharedLayoutCont";
 import SharedTxt from "@/components/shared/SharedTxt";
 import {IncomeExpend, Query} from "@/libs/__generated__/graphql";
 import {INCOME_EXPEND_FRAG} from "@/libs/fragments/incomeExpendFrag";
+import {useModalState} from "@/store/modalState";
 import {IRouterParams} from "@/types/routerParamsType";
 import {DocumentNode, TypedDocumentNode, gql, useQuery} from "@apollo/client";
 import {useGlobalSearchParams} from "expo-router";
 import {useState} from "react";
-import {ActivityIndicator} from "react-native";
-import {FlatList, TouchableOpacity} from "react-native-gesture-handler";
+import {FlatList, TouchableOpacity} from "react-native";
+
 const EXPEND_MODEL = gql`
   query expendModel($searchCompanyId: Int!) {
     searchCompany(id: $searchCompanyId) {
       inNout {
+        id
         expendMoney
         expendModel {
           ...IncomeExpendFrag
@@ -30,22 +35,34 @@ const EXPEND_MODEL = gql`
   ${INCOME_EXPEND_FRAG}
 ` as DocumentNode | TypedDocumentNode<Query>;
 export default function Page() {
+  const [refresh, setRefresh] = useState(false);
   const [pay, setPay] = useState(true);
+  const {iNeModal, setINEModal, createProductModal, setCreateProductModal} =
+    useModalState();
   const {companyId} = useGlobalSearchParams<Partial<IRouterParams>>();
-  const {data, loading} = useQuery(EXPEND_MODEL, {
+  const {data, loading, refetch} = useQuery(EXPEND_MODEL, {
     variables: {searchCompanyId: Number(companyId)},
   });
   const inNout = data?.searchCompany?.inNout;
-  const paidIncome = data?.searchCompany?.inNout.expendModel;
-  const waitIncome = data?.searchCompany?.inNout.waitExpendModel;
-
+  const paidExpend = data?.searchCompany?.inNout.expendModel;
+  const waitExpend = data?.searchCompany?.inNout.waitExpendModel;
+  //fn
+  const refreshSubmit = async () => {
+    setRefresh(true);
+    try {
+      await refetch();
+    } catch (err) {
+      console.log(err);
+    }
+    setRefresh(false);
+  };
   return (
     <SharedLayoutCont loading={loading}>
       <INECont>
         <RowCont content="space-around">
           <TouchableOpacity onPress={() => setPay(true)}>
             <SharedTxt
-              text="지불된 수입"
+              text="지불된 지출"
               size="20px"
               bold={700}
               style={{paddingVertical: 10}}
@@ -53,54 +70,75 @@ export default function Page() {
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setPay(false)}>
             <SharedTxt
-              text="대기중인 수입"
+              text="대기중인 지출"
               size="20px"
               bold={700}
               style={{paddingVertical: 10}}
             />
           </TouchableOpacity>
         </RowCont>
+        <RowCont content="space-between">
+          <SharedBtn
+            text="수입지출상품작성"
+            width="45%"
+            onSubmit={() => setINEModal()}
+          />
+          <SharedBtn
+            text="수입지출모델작성"
+            width="45%"
+            onSubmit={() => setCreateProductModal()}
+          />
+        </RowCont>
         {pay && (
           <>
             <RowCont content="space-between">
-              <SharedTxt text="지불된 수입" size="20px" />
+              <SharedTxt text="지불된 지출" size="20px" />
               <SharedTxt
                 text={`${inNout?.expendMoney?.toLocaleString()} 원`}
                 size="20px"
               />
             </RowCont>
-
             <FlatList
-              data={paidIncome as IncomeExpend[]}
+              data={paidExpend as IncomeExpend[]}
               keyExtractor={(item) => item?.id + ""}
               renderItem={({item}: {item: IncomeExpend}) => (
                 <IncomeExpendCard item={item} />
               )}
               ItemSeparatorComponent={() => <FlatSeparator />}
+              refreshing={refresh}
+              onRefresh={refreshSubmit}
             />
           </>
         )}
         {!pay && (
           <>
             <RowCont content="space-between">
-              <SharedTxt text="대기중인 수입" size="20px" />
+              <SharedTxt text="대기중인 지출" size="20px" />
               <SharedTxt
                 text={`${inNout?.waitExpendMoney?.toLocaleString()} 원`}
                 size="20px"
               />
             </RowCont>
-
             <FlatList
-              data={waitIncome as IncomeExpend[]}
+              data={waitExpend as IncomeExpend[]}
               keyExtractor={(item) => item?.id + ""}
               renderItem={({item}: {item: IncomeExpend}) => (
                 <IncomeExpendCard item={item} />
               )}
               ItemSeparatorComponent={() => <FlatSeparator />}
+              refreshing={refresh}
+              onRefresh={refreshSubmit}
             />
           </>
         )}
       </INECont>
+      {createProductModal && (
+        <CreateProductModal
+          modal={createProductModal}
+          inNoutId={inNout?.id + ""}
+        />
+      )}
+      {iNeModal && <CreateInExModal modal={iNeModal} inNoutId={inNout?.id!} />}
     </SharedLayoutCont>
   );
 }

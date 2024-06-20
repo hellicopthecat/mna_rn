@@ -46,7 +46,10 @@ export default function AssetCard({item}: {item: EquityLiabilities}) {
         <SharedTxt color="black" text={item.enLName} bold={700} size="20px" />
         <RowCont gap="10px" content="space-between">
           <SharedTxt color="black" text={item.enLId} />
-          <SharedTxt color="black" text={`${item.value.toLocaleString()} 원`} />
+          <SharedTxt
+            color="black"
+            text={`${item.value && item.value.toLocaleString()} 원`}
+          />
         </RowCont>
         <SharedBtn text="자세히보기" onSubmit={() => goModal()} />
       </AssetDescCard>

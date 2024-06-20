@@ -17,5 +17,6 @@ export const ChartViewCont = styled.View`
   border-radius: 25px;
 `;
 export const ChartView = styled.View`
+  overflow: hidden;
   align-items: center;
 `;

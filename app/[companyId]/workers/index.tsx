@@ -1,3 +1,4 @@
+import RegistWorker from "@/components/afterLogin/workerInfo/registWorker/registWorker";
 import {WorkerCont} from "@/components/afterLogin/workerInfo/workerInfoCard.style";
 import WorkderInfoCard from "@/components/afterLogin/workerInfo/workerInforCard";
 import FlatSeparator from "@/components/shared/FlatSeparator";
@@ -8,10 +9,12 @@ import SharedTxt from "@/components/shared/SharedTxt";
 import {Query, User} from "@/libs/__generated__/graphql";
 import {SALARY_FRAG} from "@/libs/fragments/salaryFrag";
 import {VACATION_FRAG} from "@/libs/fragments/vacationFrag";
+import {useModalState} from "@/store/modalState";
 import {IRouterParams} from "@/types/routerParamsType";
 import {DocumentNode, TypedDocumentNode, gql, useQuery} from "@apollo/client";
 import {useGlobalSearchParams} from "expo-router";
-import {ActivityIndicator, FlatList, TouchableOpacity} from "react-native";
+import {useState} from "react";
+import {FlatList, TouchableOpacity} from "react-native";
 const COMPANY_WORKER_QUERY = gql`
   query companyWorkers($searchCompanyId: Int!) {
     searchCompany(id: $searchCompanyId) {
@@ -34,11 +37,23 @@ const COMPANY_WORKER_QUERY = gql`
   ${VACATION_FRAG}
 ` as DocumentNode | TypedDocumentNode<Query>;
 export default function Page() {
+  const [refresh, setRefresh] = useState(false);
+  const {registWorker, setRegistWorker} = useModalState();
   const {companyId} = useGlobalSearchParams<Partial<IRouterParams>>();
-  const {data, loading} = useQuery(COMPANY_WORKER_QUERY, {
+  const {data, loading, refetch} = useQuery(COMPANY_WORKER_QUERY, {
     variables: {searchCompanyId: Number(companyId)},
   });
   const worker = data?.searchCompany?.companyWorker;
+  //fn
+  const refreshSubmit = async () => {
+    setRefresh(true);
+    try {
+      await refetch();
+    } catch (err) {
+      console.log(err);
+    }
+    setRefresh(false);
+  };
 
   return (
     <SharedLayoutCont loading={loading}>
@@ -47,7 +62,11 @@ export default function Page() {
           <TouchableOpacity>
             <SharedTxt text="인사관리" size="40px" bold={700} />
           </TouchableOpacity>
-          <SharedBtn text="직원등록" width="20%" />
+          <SharedBtn
+            text="직원등록"
+            width="20%"
+            onSubmit={() => setRegistWorker()}
+          />
         </RowCont>
         <FlatList
           data={worker as User[]}
@@ -55,8 +74,11 @@ export default function Page() {
           renderItem={({item}) => <WorkderInfoCard item={item} />}
           ItemSeparatorComponent={() => <FlatSeparator />}
           contentInset={{bottom: 50}}
+          refreshing={refresh}
+          onRefresh={refreshSubmit}
         />
       </WorkerCont>
+      {registWorker && <RegistWorker visible={registWorker} />}
     </SharedLayoutCont>
   );
 }

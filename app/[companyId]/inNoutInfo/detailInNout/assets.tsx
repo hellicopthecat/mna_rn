@@ -19,12 +19,16 @@ const CURRENT_ASSETS_INNOUT = gql`
   query currentAssets($searchCompanyId: Int!) {
     searchCompany(id: $searchCompanyId) {
       inNout {
+        id
         currentAssets
         currentAssetsDesc {
           ...EquityLiabilitiesFrag
         }
         nonCurrentAssets
         nonCurrentAssetsDesc {
+          ...EquityLiabilitiesFrag
+        }
+        totalAssetsDesc {
           ...EquityLiabilitiesFrag
         }
       }

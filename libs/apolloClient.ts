@@ -24,7 +24,7 @@ const cache = new InMemoryCache({
 });
 
 const httpLink = new HttpLink({
-  uri: "https://5ef9-58-227-141-22.ngrok-free.app/graphql",
+  uri: "https://fb21-58-227-141-22.ngrok-free.app/graphql",
 });
 const authLink = setContext(async (_, {headers}) => {
   const token = await AsyncStorage.getItem(TOKEN);

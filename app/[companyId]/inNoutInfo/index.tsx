@@ -5,6 +5,8 @@ import {
   ChartView,
   ChartViewCont,
 } from "@/components/afterLogin/inNoutInfo/inNoutInfo.style";
+import Avatar from "@/components/shared/Avatar";
+import RowCont from "@/components/shared/RowCont";
 import SharedBtn from "@/components/shared/SharedBtn";
 import SharedLayoutCont from "@/components/shared/SharedLayoutCont";
 import SharedTxt from "@/components/shared/SharedTxt";
@@ -67,12 +69,20 @@ export default function Page() {
     {
       value: inNoutData?.inNout.capital,
       color: theme ? dark.secondary : light.secondary,
-      text: `${inNoutData?.inNout.capital.toLocaleString()}`,
+      text: `${
+        inNoutData?.inNout.capital
+          ? inNoutData?.inNout.capital.toLocaleString()
+          : 0
+      }`,
     },
     {
       value: inNoutData?.inNout.liabilities,
       color: theme ? dark.primary : light.primary,
-      text: `${inNoutData?.inNout.liabilities.toLocaleString()}`,
+      text: `${
+        inNoutData?.inNout.liabilities
+          ? inNoutData?.inNout.liabilities.toLocaleString()
+          : 0
+      }`,
     },
   ];
   const barData = [
@@ -158,6 +168,7 @@ export default function Page() {
               alignItems: "center",
               gap: 20,
             }}
+            automaticallyAdjustContentInsets
             contentInset={{bottom: 100}}
             refreshControl={
               <RefreshControl refreshing={refresh} onRefresh={handleRefresh} />
@@ -175,40 +186,71 @@ export default function Page() {
                   donut
                   showText
                   focusOnPress
-                  innerRadius={50}
-                  textColor={"black"}
+                  innerRadius={45}
                   textSize={15}
+                  labelsPosition={"onBorder"}
                   fontWeight="700"
-                  strokeColor={theme ? dark.bgColor : light.bgColor}
-                  strokeWidth={5}
+                  strokeColor={dark.bgColor}
+                  strokeWidth={4}
                   radius={100}
                   shadowColor="lightgray"
-                  innerCircleColor={theme ? dark.bgColor : light.bgColor}
-                  innerCircleBorderColor={theme ? dark.bgColor : light.bgColor}
+                  innerCircleColor={dark.bgColor}
+                  innerCircleBorderColor={dark.bgColor}
                   centerLabelComponent={() => {
                     return (
                       <>
-                        <SharedTxt bold={700} text={`총 자산`} align="center" />
                         <SharedTxt
                           bold={700}
-                          text={`${inNoutData?.inNout.totalAssets}`}
+                          text={`총 자산`}
+                          align="center"
+                          color="white"
+                        />
+                        <SharedTxt
+                          bold={700}
+                          text={`${
+                            inNoutData?.inNout.totalAssets
+                              ? inNoutData?.inNout.totalAssets.toLocaleString()
+                              : 0
+                          }`}
+                          color="white"
                         />
                       </>
                     );
                   }}
                   data={pieData as pieDataItem[]}
                 />
+                <RowCont gap="10px">
+                  <RowCont gap="5px">
+                    <Avatar
+                      width="15px"
+                      height="15px"
+                      color={theme ? dark.secondary : light.secondary}
+                    />
+                    <SharedTxt text="무슨 값?" color="black" />
+                  </RowCont>
+                  <RowCont gap="5px">
+                    <Avatar
+                      width="15px"
+                      height="15px"
+                      color={theme ? dark.primary : light.primary}
+                    />
+                    <SharedTxt text="무슨 값?" color="black" />
+                  </RowCont>
+                </RowCont>
               </ChartView>
             </ChartViewCont>
             <ChartViewCont>
               <SharedTxt text="재산" size="25px" bold={700} color="black" />
               <ChartView>
                 <BarChart
+                  isAnimated
                   showValuesAsTopLabel
                   showYAxisIndices
                   barWidth={35}
-                  noOfSections={4}
-                  barBorderRadius={10}
+                  noOfSections={5}
+                  maxValue={100}
+                  mostNegativeValue={-100}
+                  stepValue={10}
                   data={barData as barDataItem[]}
                 />
               </ChartView>
@@ -217,10 +259,11 @@ export default function Page() {
               <SharedTxt text="재산" size="25px" bold={700} color="black" />
               <ChartView>
                 <BarChart
+                  isAnimated
                   showYAxisIndices
+                  showValuesAsTopLabel
                   barWidth={20}
-                  barBorderRadius={10}
-                  noOfSections={4}
+                  noOfSections={5}
                   data={horizontalData as barDataItem[]}
                 />
               </ChartView>

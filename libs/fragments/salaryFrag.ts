@@ -10,6 +10,7 @@ export const SALARY_FRAG = gql`
     annualSalary
     earnIncomeDedution
     earnIncomeAmount
+    familyCount
     familyDedution
     pensionInsuranceDedution
     specialIncomeDedution

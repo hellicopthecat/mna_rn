@@ -20,12 +20,16 @@ const CURRENT_LIABILITY_INNOUT = gql`
   query currentLiability($searchCompanyId: Int!) {
     searchCompany(id: $searchCompanyId) {
       inNout {
+        id
         currentLiabilities
         currentLiabilitiesDesc {
           ...EquityLiabilitiesFrag
         }
         nonCurrentLiabilities
         nonCurrentLiabilitiesDesc {
+          ...EquityLiabilitiesFrag
+        }
+        totalAssetsDesc {
           ...EquityLiabilitiesFrag
         }
       }
@@ -35,16 +39,27 @@ const CURRENT_LIABILITY_INNOUT = gql`
   ${EQUITY_LIABILITIES_FRAG}
 ` as DocumentNode | TypedDocumentNode<Query>;
 export default function Page() {
+  const [refresh, setRefresh] = useState(false);
   const [modal, setModal] = useState(false);
   const [current, setCurrent] = useState(true);
   const {companyId} = useGlobalSearchParams<Partial<IRouterParams>>();
-  const {data, loading} = useQuery(CURRENT_LIABILITY_INNOUT, {
+  const {data, loading, refetch} = useQuery(CURRENT_LIABILITY_INNOUT, {
     variables: {searchCompanyId: Number(companyId)},
   });
   const inNout = data?.searchCompany?.inNout;
   const currentLiability = data?.searchCompany?.inNout.currentLiabilitiesDesc;
   const nonCurrentLiability =
     data?.searchCompany?.inNout.nonCurrentLiabilitiesDesc;
+  //fn
+  const refreshSubmit = async () => {
+    setRefresh(true);
+    try {
+      await refetch();
+    } catch (err) {
+      console.log(err);
+    }
+    setRefresh(false);
+  };
   return (
     <SharedLayoutCont loading={loading}>
       <AssetCardCont>
@@ -80,6 +95,8 @@ export default function Page() {
                 <AssetCard item={item} />
               )}
               ItemSeparatorComponent={() => <FlatSeparator />}
+              refreshing={refresh}
+              onRefresh={refreshSubmit}
             />
           </>
         )}
@@ -100,6 +117,8 @@ export default function Page() {
                 <AssetCard item={item} />
               )}
               ItemSeparatorComponent={() => <FlatSeparator />}
+              refreshing={refresh}
+              onRefresh={refreshSubmit}
             />
           </>
         )}

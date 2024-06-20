@@ -1,8 +1,12 @@
-import {Stack, Tabs} from "expo-router";
+import {Stack} from "expo-router";
 
 export default function WorkersLayout() {
   return (
-    <Stack screenOptions={{headerShown: false}}>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
       <Stack.Screen name="index" />
     </Stack>
   );

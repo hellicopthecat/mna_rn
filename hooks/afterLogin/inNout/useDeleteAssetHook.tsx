@@ -12,6 +12,8 @@ interface IDeleteAssetProps {
   enLId: string;
   inNoutId: string;
   itemValue: string;
+  current?: boolean;
+  assets?: boolean;
 }
 const DELETE_ASSET_MUTATE = gql`
   mutation deleteEnL($enLId: String!) {
@@ -29,6 +31,8 @@ export default function useDeleteAssetHook() {
     enLId,
     inNoutId,
     itemValue,
+    current,
+    assets,
   }: IDeleteAssetProps) => {
     Alert.alert("자산 삭제", "자산을 삭제하시겠습니까?", [
       {
@@ -49,12 +53,33 @@ export default function useDeleteAssetHook() {
                 cache.modify({
                   id: `InNout:${inNoutId}`,
                   fields: {
+                    currentAssets(prev) {
+                      return current && assets
+                        ? (prev - Number(itemValue)).toLocaleString()
+                        : prev;
+                    },
+                    nonCurrentAssets(prev) {
+                      return !current && assets
+                        ? (prev - Number(itemValue)).toLocaleString()
+                        : prev;
+                    },
+                    currentLiabilities(prev) {
+                      return current && !assets
+                        ? (prev - Number(itemValue)).toLocaleString()
+                        : prev;
+                    },
+                    nonCurrentLiabilities(prev) {
+                      return !current && !assets
+                        ? (prev - Number(itemValue)).toLocaleString()
+                        : prev;
+                    },
                     totalAssets(prev) {
                       return (prev - Number(itemValue)).toLocaleString();
                     },
                   },
                 });
                 cache.evict({id: `EquityLiabilities:${id}`});
+                cache.evict({id: `IncomeExpend${data.deleteEnL.subId}`});
                 cache.gc();
               }
             },

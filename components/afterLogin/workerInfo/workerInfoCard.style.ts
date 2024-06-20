@@ -4,7 +4,7 @@ export const WorkerCont = styled.View`
   flex: 1;
   gap: 20px;
 `;
-export const WorkerCardCont = styled.View`
+export const WorkerCardCont = styled.TouchableOpacity`
   flex: 1;
   flex-direction: row;
   background-color: white;

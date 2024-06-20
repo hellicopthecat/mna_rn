@@ -5,6 +5,10 @@ import RowCont from "@/components/shared/RowCont";
 import SharedBtn from "@/components/shared/SharedBtn";
 
 export default function IncomeExpendCard({item}: {item: IncomeExpend}) {
+  const formatDate = (date: string) => {
+    const data = new Date(Number(date));
+    return data.toLocaleDateString();
+  };
   return (
     <INECard>
       <RowCont content="space-between">
@@ -20,15 +24,16 @@ export default function IncomeExpendCard({item}: {item: IncomeExpend}) {
         <RowCont gap="5px">
           <SharedTxt text="생성일" color="gray" size="13px" />
           <SharedTxt
-            text={new Date(Number(item.createdAt)).toLocaleDateString() + ""}
+            text={formatDate(item.createdAt)}
             color="gray"
             size="13px"
           />
         </RowCont>
+
         <RowCont gap="5px">
           <SharedTxt text="수정일" color="gray" size="13px" />
           <SharedTxt
-            text={new Date(Number(item.updateAt)).toLocaleDateString() + ""}
+            text={formatDate(item.updateAt)}
             color="gray"
             size="13px"
           />
@@ -36,29 +41,12 @@ export default function IncomeExpendCard({item}: {item: IncomeExpend}) {
       </RowCont>
       <RowCont gap="10px">
         <SharedTxt text="가격" color="black" />
-        <SharedTxt text={`${item.money.toLocaleString()} 원`} color="black" />
-      </RowCont>
-      <RowCont gap="10px">
-        <SharedTxt text="거래일" color="black" />
         <SharedTxt
-          text={!item.businessDate ? "미작성" : item.businessDate + ""}
+          text={item.money ? `${item.money.toLocaleString()} 원` : "0 원"}
           color="black"
         />
       </RowCont>
-      <RowCont gap="10px">
-        <SharedTxt text="거래타입" color="black" />
-        <SharedTxt
-          text={!item.paymentType ? "미작성" : item.paymentType + ""}
-          color="black"
-        />
-      </RowCont>
-      <RowCont gap="10px">
-        <SharedTxt text="계정과목" color="black" />
-        <SharedTxt
-          text={!item.accountCode ? "미작성" : item.accountCode + ""}
-          color="black"
-        />
-      </RowCont>
+
       <RowCont gap="10px">
         <SharedTxt text="결제" color="black" />
         <SharedTxt
@@ -72,13 +60,7 @@ export default function IncomeExpendCard({item}: {item: IncomeExpend}) {
           color="black"
         />
       </RowCont>
-      <RowCont gap="10px">
-        <SharedTxt text="거래내용" color="black" />
-        <SharedTxt
-          text={!item.businessDesc ? "미작성" : item.businessDesc + ""}
-          color="black"
-        />
-      </RowCont>
+
       <SharedBtn text="자세히 보기" />
     </INECard>
   );

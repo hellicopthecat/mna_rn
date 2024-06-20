@@ -67,21 +67,41 @@ export default function useCreateAssetHook() {
       },
       update(cache, {data}) {
         if (data?.createEnL.ok) {
+          const newData = {
+            __typename: "EquityLiabilities",
+            id: data.createEnL.id,
+            enLId,
+            enLName,
+            enLType,
+            current,
+            assests,
+            value: Number(value),
+            enLDesc,
+          };
           cache.modify({
             id: `InNout:${inNoutId}`,
             fields: {
+              currentAssetsDesc(prev, {toReference}) {
+                return current && assests
+                  ? [toReference(newData, true), ...prev]
+                  : prev;
+              },
+              nonCurrentAssetsDesc(prev, {toReference}) {
+                return !current && assests
+                  ? [toReference(newData, true), ...prev]
+                  : prev;
+              },
+              currentLiabilitiesDesc(prev, {toReference}) {
+                return current && !assests
+                  ? [toReference(newData, true), ...prev]
+                  : prev;
+              },
+              nonCurrentLiabilitiesDesc(prev, {toReference}) {
+                return !current && !assests
+                  ? [toReference(newData, true), ...prev]
+                  : prev;
+              },
               totalAssetsDesc(prev, {toReference}) {
-                const newData = {
-                  __typename: "EquityLiabilities",
-                  id: data.createEnL.id,
-                  enLId,
-                  enLName,
-                  enLType,
-                  current,
-                  assests,
-                  value: Number(value),
-                  enLDesc,
-                };
                 const newTotalAssets = toReference(newData, true);
                 return [newTotalAssets, ...prev];
               },
