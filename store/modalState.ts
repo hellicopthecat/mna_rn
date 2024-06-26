@@ -1,5 +1,6 @@
 import {create} from "zustand";
 interface IModalState {
+  editAdressModal: boolean;
   editUserModal: boolean;
   createCompanyModal: boolean;
   editAssets: number | null;
@@ -7,6 +8,11 @@ interface IModalState {
   createProductModal: boolean;
   registWorker: boolean;
   workerModal: number | null;
+  salaryModal: boolean;
+  vacationModal: boolean;
+  createSalaryModal: boolean;
+  createVacationModal: boolean;
+  setEditAdressModal: () => void;
   setEditUserModal: () => void;
   setCreateCompany: () => void;
   setEditAssetsModal: (id: number | null) => void;
@@ -14,8 +20,13 @@ interface IModalState {
   setCreateProductModal: () => void;
   setRegistWorker: () => void;
   setWorkerModal: (id: number | null) => void;
+  setSalaryModal: () => void;
+  setVacationModal: () => void;
+  setCreateSalaryModal: () => void;
+  setCreateVacationModal: () => void;
 }
 export const useModalState = create<IModalState>((set) => ({
+  editAdressModal: false,
   editUserModal: false,
   createCompanyModal: false,
   editAssets: null,
@@ -23,6 +34,12 @@ export const useModalState = create<IModalState>((set) => ({
   createProductModal: false,
   registWorker: false,
   workerModal: null,
+  salaryModal: false,
+  vacationModal: false,
+  createSalaryModal: false,
+  createVacationModal: false,
+  setEditAdressModal: () =>
+    set((state) => ({editAdressModal: !state.editAdressModal})),
   setEditUserModal: () =>
     set((state) => ({editUserModal: !state.editUserModal})),
   setCreateCompany: () =>
@@ -33,4 +50,11 @@ export const useModalState = create<IModalState>((set) => ({
     set((state) => ({createProductModal: !state.createProductModal})),
   setRegistWorker: () => set((state) => ({registWorker: !state.registWorker})),
   setWorkerModal: (id) => set((state) => ({workerModal: id})),
+  setSalaryModal: () => set((state) => ({salaryModal: !state.salaryModal})),
+  setVacationModal: () =>
+    set((state) => ({vacationModal: !state.vacationModal})),
+  setCreateSalaryModal: () =>
+    set((state) => ({createSalaryModal: !state.createSalaryModal})),
+  setCreateVacationModal: () =>
+    set((state) => ({createVacationModal: !state.createVacationModal})),
 }));

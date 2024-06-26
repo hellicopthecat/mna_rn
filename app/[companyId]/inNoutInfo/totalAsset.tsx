@@ -6,6 +6,7 @@ import RowCont from "@/components/shared/RowCont";
 import SharedBtn from "@/components/shared/SharedBtn";
 import SharedLayoutCont from "@/components/shared/SharedLayoutCont";
 import SharedTxt from "@/components/shared/SharedTxt";
+import useUser from "@/hooks/useUser";
 import {EquityLiabilities, Query} from "@/libs/__generated__/graphql";
 import {EQUITY_LIABILITIES_FRAG} from "@/libs/fragments/equityLiabilitiesFrag";
 import {INCOME_EXPEND_FRAG} from "@/libs/fragments/incomeExpendFrag";
@@ -18,6 +19,9 @@ import {FlatList} from "react-native";
 const TOTAL_ASSETS_INNOUT = gql`
   query totalAssets($searchCompanyId: Int!) {
     searchCompany(id: $searchCompanyId) {
+      companyManager {
+        id
+      }
       inNout {
         id
         totalAssets
@@ -59,6 +63,7 @@ const TOTAL_ASSETS_INNOUT = gql`
   ${INCOME_EXPEND_FRAG}
 ` as DocumentNode | TypedDocumentNode<Query>;
 export default function Page() {
+  const {data: userData} = useUser();
   const [modal, setModal] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const {companyId} = useGlobalSearchParams<Partial<IRouterParams>>();
@@ -85,7 +90,14 @@ export default function Page() {
             text={`${companyInNout?.totalAssets.toLocaleString()} 원`}
           />
         </RowCont>
-        <SharedBtn text="자산생성" onSubmit={() => setModal((prev) => !prev)} />
+        {data?.searchCompany?.companyManager.find(
+          (manager) => manager?.id === userData?.seeMyprofile.id
+        ) && (
+          <SharedBtn
+            text="자산생성"
+            onSubmit={() => setModal((prev) => !prev)}
+          />
+        )}
         <FlatList
           data={companyInNout?.totalAssetsDesc as EquityLiabilities[]}
           keyExtractor={(item: EquityLiabilities) => item.id + ""}

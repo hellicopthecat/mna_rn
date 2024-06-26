@@ -6,8 +6,10 @@ import RowCont from "@/components/shared/RowCont";
 import SharedBtn from "@/components/shared/SharedBtn";
 import SharedLayoutCont from "@/components/shared/SharedLayoutCont";
 import SharedTxt from "@/components/shared/SharedTxt";
+import useUser from "@/hooks/useUser";
 import {Query, User} from "@/libs/__generated__/graphql";
 import {SALARY_FRAG} from "@/libs/fragments/salaryFrag";
+import {USER_FRAG} from "@/libs/fragments/userFrag";
 import {VACATION_FRAG} from "@/libs/fragments/vacationFrag";
 import {useModalState} from "@/store/modalState";
 import {IRouterParams} from "@/types/routerParamsType";
@@ -18,6 +20,9 @@ import {FlatList, TouchableOpacity} from "react-native";
 const COMPANY_WORKER_QUERY = gql`
   query companyWorkers($searchCompanyId: Int!) {
     searchCompany(id: $searchCompanyId) {
+      companyManager {
+        id
+      }
       companyWorker {
         id
         username
@@ -26,13 +31,20 @@ const COMPANY_WORKER_QUERY = gql`
         phone
         salary {
           ...SalaryFrag
+          user {
+            ...UserFrag
+          }
         }
         vacation {
           ...VacationFrag
+          user {
+            ...UserFrag
+          }
         }
       }
     }
   }
+  ${USER_FRAG}
   ${SALARY_FRAG}
   ${VACATION_FRAG}
 ` as DocumentNode | TypedDocumentNode<Query>;
@@ -40,7 +52,8 @@ export default function Page() {
   const [refresh, setRefresh] = useState(false);
   const {registWorker, setRegistWorker} = useModalState();
   const {companyId} = useGlobalSearchParams<Partial<IRouterParams>>();
-  const {data, loading, refetch} = useQuery(COMPANY_WORKER_QUERY, {
+  const {data: userData} = useUser();
+  const {data, loading, refetch, error} = useQuery(COMPANY_WORKER_QUERY, {
     variables: {searchCompanyId: Number(companyId)},
   });
   const worker = data?.searchCompany?.companyWorker;
@@ -54,7 +67,6 @@ export default function Page() {
     }
     setRefresh(false);
   };
-
   return (
     <SharedLayoutCont loading={loading}>
       <WorkerCont>
@@ -62,22 +74,25 @@ export default function Page() {
           <TouchableOpacity>
             <SharedTxt text="인사관리" size="40px" bold={700} />
           </TouchableOpacity>
-          <SharedBtn
-            text="직원등록"
-            width="20%"
-            onSubmit={() => setRegistWorker()}
-          />
+          {data?.searchCompany?.companyManager.find(
+            (manager) => manager?.id === userData?.seeMyprofile.id
+          ) && (
+            <SharedBtn
+              text="직원등록"
+              width="20%"
+              onSubmit={() => setRegistWorker()}
+            />
+          )}
         </RowCont>
-        <FlatList
-          data={worker as User[]}
-          keyExtractor={(item) => item.id}
-          renderItem={({item}) => <WorkderInfoCard item={item} />}
-          ItemSeparatorComponent={() => <FlatSeparator />}
-          contentInset={{bottom: 50}}
-          refreshing={refresh}
-          onRefresh={refreshSubmit}
-        />
       </WorkerCont>
+      <FlatList
+        data={worker as User[]}
+        keyExtractor={(item) => item.id}
+        renderItem={({item}) => <WorkderInfoCard item={item} />}
+        ItemSeparatorComponent={() => <FlatSeparator />}
+        refreshing={refresh}
+        onRefresh={refreshSubmit}
+      />
       {registWorker && <RegistWorker visible={registWorker} />}
     </SharedLayoutCont>
   );

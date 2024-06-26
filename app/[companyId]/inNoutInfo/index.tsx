@@ -148,20 +148,7 @@ export default function Page() {
       <SafeAreaView>
         <ChartCont>
           <ChartHeader>
-            <TouchableOpacity
-              onPress={() =>
-                router.push(`/${companyId}/inNoutInfo/detailInNout`)
-              }
-            >
-              <SharedTxt text="자산" size="40px" bold={700} />
-            </TouchableOpacity>
-            <SharedBtn
-              text="자산보기"
-              width="20%"
-              onSubmit={() =>
-                router.push(`/${companyId}/inNoutInfo/detailInNout`)
-              }
-            />
+            <SharedTxt text="자산 차트" size="30px" bold={700} />
           </ChartHeader>
           <ChartScroll
             contentContainerStyle={{

@@ -20,11 +20,20 @@ const cache = new InMemoryCache({
         },
       },
     },
+    User: {
+      fields: {
+        vacation: {
+          merge(existing, incoming) {
+            return {...existing, ...incoming};
+          },
+        },
+      },
+    },
   },
 });
 
 const httpLink = new HttpLink({
-  uri: "https://fb21-58-227-141-22.ngrok-free.app/graphql",
+  uri: `${process.env.EXPO_PUBLIC_APOLLO_HTTP}/graphql`,
 });
 const authLink = setContext(async (_, {headers}) => {
   const token = await AsyncStorage.getItem(TOKEN);

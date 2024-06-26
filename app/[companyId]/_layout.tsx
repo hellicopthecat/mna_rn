@@ -20,14 +20,15 @@ import SharedTxt from "@/components/shared/SharedTxt";
 import useUser from "@/hooks/useUser";
 import SharedBtn from "@/components/shared/SharedBtn";
 import userToken from "@/store/userToken";
-import {router, useGlobalSearchParams} from "expo-router";
-import {IRouterParams} from "@/types/routerParamsType";
+import {router} from "expo-router";
 
 export default function DetailCompanyLayout() {
-  const {companyId} = useGlobalSearchParams<Partial<IRouterParams>>();
   const theme = useColorScheme() === "dark";
+
   const {data: user} = useUser();
+
   const {removeToken} = userToken();
+
   return (
     <GestureHandlerRootView>
       <Drawer
@@ -38,6 +39,8 @@ export default function DetailCompanyLayout() {
           headerTitleStyle: {color: theme ? dark.txtColor : light.txtColor},
           drawerStyle: {
             backgroundColor: theme ? dark.bgColor : light.bgColor,
+            height: "100%",
+            justifyContent: "space-between",
           },
           drawerActiveTintColor: "skyblue",
           drawerInactiveTintColor: theme ? dark.txtColor : light.txtColor,
@@ -55,10 +58,21 @@ export default function DetailCompanyLayout() {
                   </TouchableOpacity>
                 </RowCont>
               )}
-              onPress={() => {
-                props.navigation.navigate(`mypage`);
+              onPress={() => router.replace(`/mypage`)}
+            />
+            <DrawerItem
+              label={() => (
+                <View style={{alignItems: "center", width: "100%"}}>
+                  <SharedBtn
+                    text="보유회사 보러가기"
+                    onSubmit={() => router.replace(`/myCompany`)}
+                  />
+                </View>
+              )}
+              onPress={() => router.replace(`/myCompany`)}
+              style={{
+                width: "100%",
               }}
-              labelStyle={{color: "red"}}
             />
             <DrawerItemList {...props} />
             <DrawerItem
@@ -66,7 +80,6 @@ export default function DetailCompanyLayout() {
               onPress={() => removeToken()}
               style={{
                 width: "100%",
-                height: "110%",
                 justifyContent: "flex-end",
               }}
             />
@@ -74,32 +87,28 @@ export default function DetailCompanyLayout() {
         )}
       >
         <Drawer.Screen
+          name="companyHome"
+          options={{headerTitle: "회사정보", drawerLabel: "회사정보"}}
+        />
+        <Drawer.Screen
           name="inNoutInfo"
-          options={{
-            headerTitle: "자산",
-            drawerLabel({color}) {
-              return (
-                <TouchableOpacity
-                  onPress={() => router.replace(`/${companyId}/inNoutInfo`)}
-                >
-                  <Text style={{color}}>자산</Text>
-                </TouchableOpacity>
-              );
-            },
-          }}
+          options={{headerTitle: "자산", drawerLabel: "자산"}}
         />
         <Drawer.Screen
           name="workers"
           options={{headerTitle: "인사관리", drawerLabel: "인사관리"}}
         />
+
         <Drawer.Screen
           name="products"
           options={{headerTitle: "재고관리", drawerLabel: "재고관리"}}
         />
+
         <Drawer.Screen
           name="searchCompany"
           options={{headerTitle: "회사검색", drawerLabel: "회사검색"}}
         />
+
         <Drawer.Screen
           name="connectCompany"
           options={{headerTitle: "거래처", drawerLabel: "거래처"}}

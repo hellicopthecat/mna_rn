@@ -5,6 +5,7 @@ interface ISharedBtnProps {
   height?: string;
   size?: string;
   bold?: number;
+  border?: string;
   onSubmit?: () => void;
   disable?: boolean;
 }
@@ -12,6 +13,7 @@ interface ISharedBtnProps {
 interface ITouchProps {
   $width: string;
   $height: string;
+  $border: string;
 }
 
 interface ITxtProps {
@@ -25,7 +27,7 @@ const TouchableBtn = styled.TouchableOpacity<ITouchProps>`
   background-color: ${(props) => props.theme.btnColor};
   width: ${(props) => (props.$width ? props.$width : "100%")};
   height: ${(props) => (props.$height ? props.$height : "20%")};
-  border-radius: 5px;
+  border-radius: ${(props) => props.$border};
 `;
 const BtnText = styled.Text<ITxtProps>`
   color: ${(props) => props.theme.btnTxtColor};
@@ -38,11 +40,17 @@ export default function SharedBtn({
   height = "30px",
   size = "15px",
   bold = 600,
+  border = "5px",
   onSubmit,
   disable = false,
 }: ISharedBtnProps) {
   return (
-    <TouchableBtn onPress={onSubmit} $width={width} $height={height}>
+    <TouchableBtn
+      onPress={onSubmit}
+      $width={width}
+      $height={height}
+      $border={border}
+    >
       <BtnText $size={size} $bold={bold} disabled={disable}>
         {text}
       </BtnText>

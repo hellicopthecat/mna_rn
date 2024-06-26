@@ -12,6 +12,7 @@ export const VACATION_FRAG = gql`
     restAnnualVacation
     restOtherVacation
     totalVacation
+    companyId
   }
 `;
 

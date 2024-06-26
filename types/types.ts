@@ -86,3 +86,28 @@ export interface IRegistWorker {
   familyCount: number;
   preTaxMonthlySalary: number;
 }
+export interface ICreateVacation {
+  userId?: number;
+  companyId?: number;
+  other: number;
+  joinCompanyDate?: string;
+}
+export interface IEditVacation {
+  vacationId?: number;
+  other?: number;
+  joinCompanyDate?: string;
+}
+
+export interface ICreateSalary {
+  userId?: number;
+  preTaxMonthlySalary: number;
+  familyCount: number;
+  childCount: number;
+}
+export interface IEditSalary {
+  salaryId?: number;
+  userId?: number;
+  preTaxMonthlySalary: number;
+  familyCount: number;
+  childCount: number;
+}

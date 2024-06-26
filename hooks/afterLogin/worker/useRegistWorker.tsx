@@ -51,7 +51,7 @@ export default function useRegistWorker() {
         familyCount,
         preTaxMonthlySalary,
       },
-      onCompleted(data, clientOptions) {
+      onCompleted(data) {
         if (!data.registWorker.ok) {
           Alert.alert("사원등록실패", data.registWorker.errorMsg + "");
         } else {

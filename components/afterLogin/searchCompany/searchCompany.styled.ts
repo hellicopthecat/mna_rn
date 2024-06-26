@@ -8,6 +8,6 @@ export const SearchCompanyCont = styled.View`
 export const SearchResult = styled.TouchableOpacity`
   background-color: white;
   border-radius: 10px;
-  padding: 10px;
   gap: 5px;
+  overflow: hidden;
 `;

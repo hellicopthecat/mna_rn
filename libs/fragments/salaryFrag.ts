@@ -20,5 +20,6 @@ export const SALARY_FRAG = gql`
     earnIncomeTaxCredit
     simplifiedTax
     childTax
+    companyId
   }
 `;
