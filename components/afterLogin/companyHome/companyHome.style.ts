@@ -2,7 +2,7 @@ import styled from "styled-components/native";
 
 export const CompanyAdressCont = styled.View`
   flex: 1;
-  gap: 20px;
+  gap: 30px;
   justify-content: space-between;
 `;
 export const CompanyAdressHeader = styled.View`

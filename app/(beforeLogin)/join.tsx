@@ -65,18 +65,16 @@ export default function Page() {
     } = getValues();
     if (password !== passwordCheck) {
       Alert.alert("비밀번호오류", "2차비밀번호와 일치하지 않습니다.");
+    } else {
+      handleCreateUser({
+        username,
+        email,
+        password,
+        phone,
+        firstName,
+        lastName,
+      });
     }
-    if (loading) {
-      return;
-    }
-    handleCreateUser({
-      username,
-      email,
-      password,
-      phone,
-      firstName,
-      lastName,
-    });
   };
   //fn
   const nextRef = (ref: RefObject<TextInput>) => {
@@ -214,11 +212,7 @@ export default function Page() {
         />
       </JoinPageCont>
       <JoinPageBtn>
-        <SharedBtn
-          text="회원가입"
-          disable={loading}
-          onSubmit={handleSubmit(onSubmit)}
-        />
+        <SharedBtn text="회원가입" onSubmit={handleSubmit(onSubmit)} />
         <SharedBtn text="로그인하러가기" onSubmit={() => router.replace("/")} />
       </JoinPageBtn>
     </SharedLayoutCont>

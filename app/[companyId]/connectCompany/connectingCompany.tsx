@@ -1,5 +1,6 @@
 import ConnectCompany from "@/components/afterLogin/connectCompany/connectCompany";
 import {ConnectCompanyCont} from "@/components/afterLogin/connectCompany/connectCompany.style";
+import FlatSeparator from "@/components/shared/FlatSeparator";
 import RowCont from "@/components/shared/RowCont";
 import SharedLayoutCont from "@/components/shared/SharedLayoutCont";
 import SharedTxt from "@/components/shared/SharedTxt";
@@ -37,7 +38,10 @@ export default function Page() {
         <FlatList
           data={connectingCompany as Company[]}
           keyExtractor={(item) => item.id + ""}
-          renderItem={({item}) => <ConnectCompany item={item} loading />}
+          renderItem={({item}) => (
+            <ConnectCompany item={item} loading={loading} />
+          )}
+          ItemSeparatorComponent={() => <FlatSeparator />}
         />
       </ConnectCompanyCont>
     </SharedLayoutCont>

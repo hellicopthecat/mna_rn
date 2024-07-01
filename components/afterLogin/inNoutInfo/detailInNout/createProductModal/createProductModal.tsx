@@ -8,22 +8,17 @@ import {TPaymentSwitch} from "@/libs/__generated__/graphql";
 import {useModalState} from "@/store/modalState";
 import {ICreateProductProps} from "@/types/types";
 import {Ionicons} from "@expo/vector-icons";
-
-import {Dispatch, SetStateAction, useState} from "react";
+import {useState} from "react";
 import {Controller, useForm} from "react-hook-form";
 import {Modal, Pressable, SafeAreaView, View} from "react-native";
 interface ICreateProductModal {
-  modal: boolean;
   inNoutId: string;
 }
 
-export default function CreateProductModal({
-  modal,
-  inNoutId,
-}: ICreateProductModal) {
+export default function CreateProductModal({inNoutId}: ICreateProductModal) {
   const [income, setIncome] = useState(true);
   const [payment, setPayment] = useState(TPaymentSwitch.Wait);
-  const {setCreateProductModal} = useModalState();
+  const {createProductModal, setCreateProductModal} = useModalState();
   const {handleCreateProduct} = useCreateProductHook();
   const {control, handleSubmit, getValues} = useForm<ICreateProductProps>({
     defaultValues: {
@@ -76,7 +71,7 @@ export default function CreateProductModal({
   };
 
   return (
-    <Modal visible={modal} animationType="slide">
+    <Modal visible={createProductModal} animationType="slide">
       <SharedLayoutCont>
         <SafeAreaView style={{gap: 20}}>
           <SharedTxt
@@ -91,15 +86,12 @@ export default function CreateProductModal({
               name="itemProductId"
               control={control}
               render={({field: {onBlur, onChange, value}}) => (
-                <View>
-                  <SharedTxt text="상품고유아이디" size="13px" />
-                  <SharedInput
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    placeholder="상품고유아이디"
-                  />
-                </View>
+                <SharedInput
+                  onBlur={onBlur}
+                  onChangeText={onChange}
+                  value={value + ""}
+                  placeholder="상품고유아이디"
+                />
               )}
             />
             <Controller
@@ -109,7 +101,7 @@ export default function CreateProductModal({
                 <SharedInput
                   onBlur={onBlur}
                   onChangeText={onChange}
-                  value={value}
+                  value={value + ""}
                   placeholder="상품명"
                 />
               )}
@@ -121,7 +113,7 @@ export default function CreateProductModal({
                 <SharedInput
                   onBlur={onBlur}
                   onChangeText={onChange}
-                  value={value}
+                  value={value + ""}
                   placeholder="상품모델명"
                 />
               )}
@@ -133,7 +125,7 @@ export default function CreateProductModal({
                 <SharedInput
                   onBlur={onBlur}
                   onChangeText={onChange}
-                  value={value}
+                  value={value + ""}
                   placeholder="상품사진"
                 />
               )}
@@ -145,7 +137,7 @@ export default function CreateProductModal({
                 <SharedInput
                   onBlur={onBlur}
                   onChangeText={onChange}
-                  value={value}
+                  value={value + ""}
                   placeholder="상품타입"
                 />
               )}
@@ -181,7 +173,7 @@ export default function CreateProductModal({
                 <SharedInput
                   onBlur={onBlur}
                   onChangeText={onChange}
-                  value={value}
+                  value={value + ""}
                   placeholder="결제타입"
                 />
               )}
@@ -193,7 +185,7 @@ export default function CreateProductModal({
                 <SharedInput
                   onBlur={onBlur}
                   onChangeText={onChange}
-                  value={value}
+                  value={value + ""}
                   placeholder="상품설명"
                 />
               )}
@@ -205,7 +197,7 @@ export default function CreateProductModal({
                 <SharedInput
                   onBlur={onBlur}
                   onChangeText={onChange}
-                  value={value}
+                  value={value + ""}
                   placeholder="계정코드"
                 />
               )}
@@ -217,7 +209,7 @@ export default function CreateProductModal({
                 <SharedInput
                   onBlur={onBlur}
                   onChangeText={onChange}
-                  value={value}
+                  value={value + ""}
                   placeholder="비고"
                 />
               )}

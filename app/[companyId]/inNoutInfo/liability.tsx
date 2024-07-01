@@ -15,8 +15,8 @@ import {TypedDocumentNode} from "@graphql-typed-document-node/core";
 import {useGlobalSearchParams} from "expo-router";
 import {DocumentNode} from "graphql";
 import {useState} from "react";
-import {ActivityIndicator, FlatList} from "react-native";
-import {TouchableOpacity} from "react-native-gesture-handler";
+import {TouchableOpacity, FlatList} from "react-native";
+
 const CURRENT_LIABILITY_INNOUT = gql`
   query currentLiability($searchCompanyId: Int!) {
     searchCompany(id: $searchCompanyId) {
@@ -68,15 +68,32 @@ export default function Page() {
   return (
     <SharedLayoutCont loading={loading}>
       <AssetCardCont>
-        <RowCont content="space-around">
+        <RowCont
+          style={{
+            borderWidth: 1,
+            borderStyle: "solid",
+            borderColor: "cornflowerblue",
+            borderRadius: 5,
+          }}
+        >
           <TouchableOpacity
-            style={{paddingVertical: 10}}
+            style={{
+              flex: 1,
+              padding: 10,
+              alignItems: "center",
+              backgroundColor: current ? "cornflowerblue" : "transparent",
+            }}
             onPress={() => setCurrent(true)}
           >
             <SharedTxt text="유동부채" size="25px" bold={700} />
           </TouchableOpacity>
           <TouchableOpacity
-            style={{paddingVertical: 10}}
+            style={{
+              flex: 1,
+              padding: 10,
+              alignItems: "center",
+              backgroundColor: !current ? "cornflowerblue" : "transparent",
+            }}
             onPress={() => setCurrent(false)}
           >
             <SharedTxt text="부동부채" size="25px" bold={700} />

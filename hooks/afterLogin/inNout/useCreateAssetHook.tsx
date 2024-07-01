@@ -105,6 +105,9 @@ export default function useCreateAssetHook() {
                 const newTotalAssets = toReference(newData, true);
                 return [newTotalAssets, ...prev];
               },
+              totalAssets(prev) {
+                return prev + Number(value);
+              },
             },
           });
         }

@@ -1,7 +1,7 @@
 import {create} from "zustand";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {TOKEN} from "@/constants/constansts";
-import {router} from "expo-router";
+
 type UserTokenType = {
   token: any;
   setToken: (payload: string) => void;
@@ -15,7 +15,6 @@ const userToken = create<UserTokenType>((set) => ({
   },
   removeToken: async () => {
     await AsyncStorage.removeItem(TOKEN);
-    router.replace("/");
     set({token: null});
   },
 }));

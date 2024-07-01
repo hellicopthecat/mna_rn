@@ -10,6 +10,7 @@ import useUser from "@/hooks/useUser";
 import {useModalState} from "@/store/modalState";
 import userToken from "@/store/userToken";
 import {IEditUserProps} from "@/types/types";
+import {router} from "expo-router";
 import {Controller, useForm} from "react-hook-form";
 import {Modal, SafeAreaView, View, useColorScheme} from "react-native";
 import styled from "styled-components/native";
@@ -33,7 +34,7 @@ const MyPageDownFirst = styled.View`
 export default function Page() {
   const theme = useColorScheme() === "dark";
   const {editUserModal, setEditUserModal} = useModalState();
-  const {data, loading} = useUser();
+  const {data, loading, client} = useUser();
   const {removeToken} = userToken();
   const {control, handleSubmit, getValues} = useForm<IEditUserProps>();
   const {handleEditUser} = useEditUserHook();
@@ -47,6 +48,11 @@ export default function Page() {
       phone,
       avatar,
     });
+  };
+  const logout = async () => {
+    await client.clearStore();
+    removeToken();
+    router.replace(`/`);
   };
   return (
     <SharedLayoutCont loading={loading}>
@@ -104,11 +110,7 @@ export default function Page() {
           height="10%"
           onSubmit={() => setEditUserModal()}
         />
-        <SharedBtn
-          text="로그아웃"
-          height="10%"
-          onSubmit={() => removeToken()}
-        />
+        <SharedBtn text="로그아웃" height="10%" onSubmit={logout} />
       </MyPageDown>
       {editUserModal && (
         <Modal animationType="slide" visible={editUserModal}>

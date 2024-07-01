@@ -3,8 +3,11 @@ import {INECard} from "./incomeExpendCard.style";
 import SharedTxt from "@/components/shared/SharedTxt";
 import RowCont from "@/components/shared/RowCont";
 import SharedBtn from "@/components/shared/SharedBtn";
+import {useModalState} from "@/store/modalState";
+import DetailINEModal from "./detailINEModal/detailINEModal";
 
 export default function IncomeExpendCard({item}: {item: IncomeExpend}) {
+  const {detailIneModal, setDetailINEModal} = useModalState();
   const formatDate = (date: string) => {
     const data = new Date(Number(date));
     return data.toLocaleDateString();
@@ -46,7 +49,6 @@ export default function IncomeExpendCard({item}: {item: IncomeExpend}) {
           color="black"
         />
       </RowCont>
-
       <RowCont gap="10px">
         <SharedTxt text="결제" color="black" />
         <SharedTxt
@@ -60,8 +62,11 @@ export default function IncomeExpendCard({item}: {item: IncomeExpend}) {
           color="black"
         />
       </RowCont>
-
-      <SharedBtn text="자세히 보기" />
+      <SharedBtn
+        text="자세히 보기"
+        onSubmit={() => setDetailINEModal(item.id)}
+      />
+      {detailIneModal === item.id && <DetailINEModal iNe={item} />}
     </INECard>
   );
 }

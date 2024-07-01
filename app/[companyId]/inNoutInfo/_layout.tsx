@@ -15,15 +15,6 @@ export default function DetailInNoutLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          tabBarLabel: "차트",
-          tabBarIcon({color}) {
-            return <FontAwesome color={color} name="pie-chart" size={20} />;
-          },
-        }}
-      />
-      <Tabs.Screen
-        name="totalAsset"
-        options={{
           tabBarLabel: "총 자산",
           tabBarIcon({color}) {
             return <FontAwesome color={color} name="won" size={20} />;
@@ -87,6 +78,15 @@ export default function DetailInNoutLayout() {
                 size={20}
               />
             );
+          },
+        }}
+      />
+      <Tabs.Screen
+        name="chart"
+        options={{
+          tabBarLabel: "차트",
+          tabBarIcon({color}) {
+            return <FontAwesome color={color} name="pie-chart" size={20} />;
           },
         }}
       />

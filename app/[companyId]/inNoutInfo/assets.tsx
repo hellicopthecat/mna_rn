@@ -13,8 +13,7 @@ import {IRouterParams} from "@/types/routerParamsType";
 import {DocumentNode, TypedDocumentNode, gql, useQuery} from "@apollo/client";
 import {useGlobalSearchParams} from "expo-router";
 import {useState} from "react";
-import {ActivityIndicator, FlatList} from "react-native";
-import {TouchableOpacity} from "react-native-gesture-handler";
+import {FlatList, TouchableOpacity} from "react-native";
 
 const CURRENT_ASSETS_INNOUT = gql`
   query currentAssets($searchCompanyId: Int!) {
@@ -67,18 +66,35 @@ export default function Page() {
   return (
     <SharedLayoutCont loading={loading}>
       <AssetCardCont>
-        <RowCont content="space-around">
+        <RowCont
+          style={{
+            borderWidth: 1,
+            borderStyle: "solid",
+            borderColor: "cornflowerblue",
+            borderRadius: 5,
+          }}
+        >
           <TouchableOpacity
-            style={{paddingVertical: 10}}
+            style={{
+              flex: 1,
+              backgroundColor: current ? "cornflowerblue" : "transparent",
+              padding: 10,
+              alignItems: "center",
+            }}
             onPress={() => setCurrent(true)}
           >
-            <SharedTxt text="유동자산" size="25px" bold={700} />
+            <SharedTxt text="유동자산" size="20px" bold={700} />
           </TouchableOpacity>
           <TouchableOpacity
-            style={{paddingVertical: 10}}
+            style={{
+              flex: 1,
+              backgroundColor: !current ? "cornflowerblue" : "transparent",
+              padding: 10,
+              alignItems: "center",
+            }}
             onPress={() => setCurrent(false)}
           >
-            <SharedTxt text="부동자산" size="25px" bold={700} />
+            <SharedTxt text="부동자산" size="20px" bold={700} />
           </TouchableOpacity>
         </RowCont>
         {data?.searchCompany?.companyManager.find(

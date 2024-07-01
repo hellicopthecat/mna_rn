@@ -232,7 +232,7 @@ export default function AssetCardModal({item}: {item: EquityLiabilities}) {
           {editMode ? (
             <>
               <SharedBtn text="수정완료" onSubmit={handleSubmit(editSubmit)} />
-              <SharedBtn text="삭제하기" onSubmit={deletSubmit} />
+              <SharedBtn text="삭제하기" onSubmit={() => deletSubmit()} />
               <SharedBtn text="취소" onSubmit={() => setEditMode(false)} />
             </>
           ) : (

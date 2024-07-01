@@ -7,17 +7,13 @@ import {dark, light} from "@/constants/Colors";
 import SharedBtn from "@/components/shared/SharedBtn";
 import {useModalState} from "@/store/modalState";
 import AssetCardModal from "./AssetCardModal";
-import {router} from "expo-router";
 
 export default function AssetCard({item}: {item: EquityLiabilities}) {
   //state
   const {editAssets, setEditAssetsModal} = useModalState();
   //hooks
   const theme = useColorScheme() === "dark";
-  //fn
-  const goModal = () => {
-    setEditAssetsModal(item.id);
-  };
+
   return (
     <>
       <AssetDescCard>
@@ -51,9 +47,12 @@ export default function AssetCard({item}: {item: EquityLiabilities}) {
             text={`${item.value && item.value.toLocaleString()} 원`}
           />
         </RowCont>
-        <SharedBtn text="자세히보기" onSubmit={() => goModal()} />
+        <SharedBtn
+          text="자세히보기"
+          onSubmit={() => setEditAssetsModal(item.id)}
+        />
       </AssetDescCard>
-      {item.id === editAssets && <AssetCardModal item={item} />}
+      {editAssets === item.id && <AssetCardModal item={item} />}
     </>
   );
 }

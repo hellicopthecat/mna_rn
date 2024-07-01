@@ -64,22 +64,35 @@ export default function Page() {
   return (
     <SharedLayoutCont loading={loading}>
       <INECont>
-        <RowCont content="space-around">
-          <TouchableOpacity onPress={() => setPay(true)}>
-            <SharedTxt
-              text="지불된 지출"
-              size="20px"
-              bold={700}
-              style={{paddingVertical: 10}}
-            />
+        <RowCont
+          style={{
+            borderWidth: 1,
+            borderStyle: "solid",
+            borderColor: "cornflowerblue",
+            borderRadius: 5,
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              backgroundColor: pay ? "cornflowerblue" : "transparent",
+              padding: 10,
+              alignItems: "center",
+            }}
+            onPress={() => setPay(true)}
+          >
+            <SharedTxt text="지불된 지출" size="20px" bold={700} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setPay(false)}>
-            <SharedTxt
-              text="대기중인 지출"
-              size="20px"
-              bold={700}
-              style={{paddingVertical: 10}}
-            />
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              backgroundColor: !pay ? "cornflowerblue" : "transparent",
+              padding: 10,
+              alignItems: "center",
+            }}
+            onPress={() => setPay(false)}
+          >
+            <SharedTxt text="대기중인 지출" size="20px" bold={700} />
           </TouchableOpacity>
         </RowCont>
         {data?.searchCompany?.companyManager.find(
@@ -89,12 +102,12 @@ export default function Page() {
             <SharedBtn
               text="수입지출상품작성"
               width="45%"
-              onSubmit={() => setINEModal()}
+              onSubmit={() => setCreateProductModal()}
             />
             <SharedBtn
               text="수입지출모델작성"
               width="45%"
-              onSubmit={() => setCreateProductModal()}
+              onSubmit={() => setINEModal()}
             />
           </RowCont>
         )}
@@ -141,12 +154,7 @@ export default function Page() {
           </>
         )}
       </INECont>
-      {createProductModal && (
-        <CreateProductModal
-          modal={createProductModal}
-          inNoutId={inNout?.id + ""}
-        />
-      )}
+      {createProductModal && <CreateProductModal inNoutId={inNout?.id + ""} />}
       {iNeModal && <CreateInExModal modal={iNeModal} inNoutId={inNout?.id!} />}
     </SharedLayoutCont>
   );

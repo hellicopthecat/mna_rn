@@ -8,14 +8,27 @@ import SharedBtn from "@/components/shared/SharedBtn";
 import SharedInput from "@/components/shared/SharedInput";
 import SharedLayoutCont from "@/components/shared/SharedLayoutCont";
 import SharedTxt from "@/components/shared/SharedTxt";
+import useConnectCompany from "@/hooks/afterLogin/connectCompany/useConnectCompany";
+import useDisconnectCompany from "@/hooks/afterLogin/connectCompany/useDisconnectCompany";
 import useUser from "@/hooks/useUser";
 import {Company, Query} from "@/libs/__generated__/graphql";
-import {COMPANY_FRAG} from "@/libs/fragments/companyFrag";
+import {IRouterParams} from "@/types/routerParamsType";
 import {DocumentNode, TypedDocumentNode, gql, useQuery} from "@apollo/client";
-import {router} from "expo-router";
+import {router, useGlobalSearchParams} from "expo-router";
 import {Controller, useForm} from "react-hook-form";
-import {ActivityIndicator, FlatList, Text, View} from "react-native";
-
+import {ActivityIndicator, FlatList, View} from "react-native";
+const MY_COMPANY = gql`
+  query myCompany($searchCompanyId: Int!) {
+    searchCompany(id: $searchCompanyId) {
+      connectingCompany {
+        id
+      }
+      connectedCompany {
+        id
+      }
+    }
+  }
+` as DocumentNode | TypedDocumentNode<Query>;
 const SEARCH_COMPANY = gql`
   query searchByCompanyName($companyName: String) {
     searchByCompanyName(companyName: $companyName) {
@@ -28,20 +41,43 @@ const SEARCH_COMPANY = gql`
       connectedCompany {
         id
       }
+      connectingCompany {
+        id
+      }
     }
   }
 ` as DocumentNode | TypedDocumentNode<Query>;
 
 export default function Page() {
+  const {companyId} = useGlobalSearchParams<Partial<IRouterParams>>();
   const {data: userData} = useUser();
   const {control, watch} = useForm();
+  const {data: myCompany} = useQuery(MY_COMPANY, {
+    variables: {searchCompanyId: Number(companyId)},
+  });
   const {data, loading} = useQuery(SEARCH_COMPANY, {
     variables: {
       companyName: watch("companyName") === "" ? "" : watch("companyName"),
     },
   });
-  //  onPress={() => router.replace(`/${item.id}`)
+
   const SearchResultCard = ({item}: {item: Company}) => {
+    //connect
+    const {handleConnectCompany} = useConnectCompany();
+    const connectSubmit = () => {
+      handleConnectCompany({
+        companyId: Number(companyId),
+        targetCompanyId: Number(item.id),
+      });
+    };
+    //disconnect
+    const {handleDisconnect} = useDisconnectCompany();
+    const disconnectSubmit = () => {
+      handleDisconnect({
+        companyId: Number(companyId),
+        targetCompanyId: Number(item.id),
+      });
+    };
     return loading ? (
       <ActivityIndicator />
     ) : (
@@ -60,15 +96,25 @@ export default function Page() {
                 <SharedTxt text={item.companyOwner.username} color="black" />
               </RowCont>
             </View>
-            {!item.connectedCompany?.find(
-              (connect) => connect?.id === item.id
-            ) ? (
+            {myCompany?.searchCompany?.connectedCompany?.find(
+              (company) => company?.id === item.id
+            ) === undefined ? (
               <RowCont content="flex-end" style={{height: "100%"}}>
-                <SharedBtn text="연결하기" width="50%" height="100%" />
+                <SharedBtn
+                  text="연결하기"
+                  width="50%"
+                  height="100%"
+                  onSubmit={() => connectSubmit()}
+                />
               </RowCont>
             ) : (
               <RowCont content="flex-end" style={{height: "100%"}}>
-                <SharedBtn text="연결해제" width="50%" height="100%" />
+                <SharedBtn
+                  text="연결해제"
+                  width="50%"
+                  height="100%"
+                  onSubmit={() => disconnectSubmit()}
+                />
               </RowCont>
             )}
           </RowCont>
@@ -80,7 +126,6 @@ export default function Page() {
     <SharedLayoutCont>
       <SearchCompanyCont>
         <SharedTxt text="회사검색" size="25px" bold={700} />
-
         <Controller
           name="companyName"
           control={control}
@@ -93,7 +138,6 @@ export default function Page() {
             />
           )}
         />
-
         <FlatList
           data={data?.searchByCompanyName as Company[]}
           keyExtractor={(item) => item.id + ""}

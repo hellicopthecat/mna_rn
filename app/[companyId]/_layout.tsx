@@ -25,10 +25,14 @@ import {router} from "expo-router";
 export default function DetailCompanyLayout() {
   const theme = useColorScheme() === "dark";
 
-  const {data: user} = useUser();
+  const {data: user, client} = useUser();
 
   const {removeToken} = userToken();
-
+  const logout = async () => {
+    await client.clearStore();
+    removeToken();
+    router.replace("/");
+  };
   return (
     <GestureHandlerRootView>
       <Drawer
@@ -76,8 +80,8 @@ export default function DetailCompanyLayout() {
             />
             <DrawerItemList {...props} />
             <DrawerItem
-              label={() => <SharedBtn text="로그아웃" />}
-              onPress={() => removeToken()}
+              label={() => <SharedBtn text="로그아웃" onSubmit={logout} />}
+              onPress={logout}
               style={{
                 width: "100%",
                 justifyContent: "flex-end",

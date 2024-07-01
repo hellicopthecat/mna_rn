@@ -5,14 +5,16 @@ export const PRODUCT_FRAG = gql`
     id
     createdAt
     updateAt
-    itemPhoto
-    itemName
-    itemCount
     itemProductId
-    itemPrice
+    itemName
     itemModelName
+    itemPhoto
+    itemType
+    itemCount
+    itemPrice
     itemDesc
     incomeExpendTypeId
-    itemType
+    companyId
+    incomeExpendId
   }
 `;

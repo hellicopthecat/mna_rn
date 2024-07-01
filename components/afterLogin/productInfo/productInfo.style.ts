@@ -4,15 +4,14 @@ export const ProductCont = styled.View`
   gap: 20px;
   flex: 1;
 `;
-export const ProductCardCont = styled.View`
-  flex: 1;
+export const ProductCardCont = styled.TouchableOpacity`
   background-color: white;
-  border-radius: 10px;
-  gap: 5px;
+  border-radius: 5px;
   overflow: hidden;
   flex-direction: row;
 `;
 export const ProductCardLeft = styled.View`
+  background-color: cornflowerblue;
   flex: 1;
 `;
 export const ProductCardMiddle = styled.View`
@@ -20,7 +19,7 @@ export const ProductCardMiddle = styled.View`
   padding: 10px;
   gap: 5px;
 `;
-export const ProductCardRight = styled.View<{$color: string}>`
+export const ProductCardRight = styled.View<{$color: string | undefined}>`
   align-items: center;
   justify-content: center;
   flex: 1;

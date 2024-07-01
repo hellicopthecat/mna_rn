@@ -4,21 +4,30 @@ import {
   CompanyAdressDesc,
   CompanyAdressHeader,
 } from "@/components/afterLogin/companyHome/companyHome.style";
+import EditAdressModal from "@/components/afterLogin/companyHome/editAdressModal/editAdressModal";
 import Avatar from "@/components/shared/Avatar";
 import RowCont from "@/components/shared/RowCont";
 import SharedBtn from "@/components/shared/SharedBtn";
 import SharedLayoutCont from "@/components/shared/SharedLayoutCont";
 import SharedTxt from "@/components/shared/SharedTxt";
-import {Query} from "@/libs/__generated__/graphql";
+import useUser from "@/hooks/useUser";
+import {CompanyAdress, Query} from "@/libs/__generated__/graphql";
+import {useModalState} from "@/store/modalState";
 import {IRouterParams} from "@/types/routerParamsType";
 import {DocumentNode, TypedDocumentNode, gql, useQuery} from "@apollo/client";
 import {useGlobalSearchParams} from "expo-router";
-import {View} from "react-native";
+
 const SEE_COMPANY_ADRESS = gql`
   query seeCompanyAdress($searchCompanyId: Int!) {
     searchCompany(id: $searchCompanyId) {
       id
       companyName
+      companyOwner {
+        username
+      }
+      companyManager {
+        id
+      }
       companyAdress {
         id
         createdAt
@@ -29,12 +38,20 @@ const SEE_COMPANY_ADRESS = gql`
         restAdress
         adressNum
       }
+      connectedCompany {
+        id
+      }
+      connectingCompany {
+        id
+      }
     }
   }
 ` as DocumentNode | TypedDocumentNode<Query>;
 export default function Page() {
   const {companyId} = useGlobalSearchParams<Partial<IRouterParams>>();
-  const {data, loading, error} = useQuery(SEE_COMPANY_ADRESS, {
+  const {editAdressModal, setEditAdressModal} = useModalState();
+  const {data: user} = useUser();
+  const {data, loading} = useQuery(SEE_COMPANY_ADRESS, {
     variables: {searchCompanyId: Number(companyId)},
   });
   const company = data?.searchCompany;
@@ -49,6 +66,10 @@ export default function Page() {
             bold={700}
             align="center"
           />
+          <RowCont gap="10px">
+            <SharedTxt text="창업주" />
+            <SharedTxt text={company?.companyOwner.username + ""} />
+          </RowCont>
         </CompanyAdressHeader>
         <CompanyAdressDesc>
           <RowCont gap="10px">
@@ -127,10 +148,19 @@ export default function Page() {
             />
           </RowCont>
         </CompanyAdressDesc>
-        <CompanyAdressBtn>
-          <SharedBtn text="주소수정" />
-        </CompanyAdressBtn>
+        {company?.companyManager.find(
+          (manager) => manager?.id === user?.seeMyprofile.id
+        ) && (
+          <CompanyAdressBtn>
+            <SharedBtn text="주소수정" onSubmit={() => setEditAdressModal()} />
+          </CompanyAdressBtn>
+        )}
       </CompanyAdressCont>
+      {editAdressModal && (
+        <EditAdressModal
+          companyAdress={company?.companyAdress as CompanyAdress}
+        />
+      )}
     </SharedLayoutCont>
   );
 }

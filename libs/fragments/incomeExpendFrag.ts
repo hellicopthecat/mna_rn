@@ -13,5 +13,6 @@ export const INCOME_EXPEND_FRAG = gql`
     accountCode
     businessDesc
     paymentsDone
+    inNoutId
   }
 `;

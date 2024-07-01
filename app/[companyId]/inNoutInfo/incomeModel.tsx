@@ -17,13 +17,14 @@ import {TypedDocumentNode} from "@graphql-typed-document-node/core";
 import {useGlobalSearchParams} from "expo-router";
 import {DocumentNode} from "graphql";
 import {useState} from "react";
-import {ActivityIndicator, FlatList, TouchableOpacity} from "react-native";
+import {FlatList, TouchableOpacity} from "react-native";
 const INCOME_MODEL = gql`
   query incomeModels($searchCompanyId: Int!) {
     searchCompany(id: $searchCompanyId) {
       companyManager {
         id
       }
+
       inNout {
         id
         incomeMoney
@@ -68,22 +69,35 @@ export default function Page() {
   return (
     <SharedLayoutCont loading={loading}>
       <INECont>
-        <RowCont content="space-around">
-          <TouchableOpacity onPress={() => setPay(true)}>
-            <SharedTxt
-              text="지불된 수입"
-              size="20px"
-              bold={700}
-              style={{paddingVertical: 10}}
-            />
+        <RowCont
+          style={{
+            borderWidth: 1,
+            borderStyle: "solid",
+            borderColor: "cornflowerblue",
+            borderRadius: 5,
+          }}
+        >
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              backgroundColor: pay ? "cornflowerblue" : "transparent",
+              padding: 10,
+              alignItems: "center",
+            }}
+            onPress={() => setPay(true)}
+          >
+            <SharedTxt text="지불된 수입" size="20px" bold={700} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setPay(false)}>
-            <SharedTxt
-              text="대기중인 수입"
-              size="20px"
-              bold={700}
-              style={{paddingVertical: 10}}
-            />
+          <TouchableOpacity
+            style={{
+              flex: 1,
+              backgroundColor: !pay ? "cornflowerblue" : "transparent",
+              padding: 10,
+              alignItems: "center",
+            }}
+            onPress={() => setPay(false)}
+          >
+            <SharedTxt text="대기중인 수입" size="20px" bold={700} />
           </TouchableOpacity>
         </RowCont>
         {data?.searchCompany?.companyManager.find(
@@ -113,7 +127,7 @@ export default function Page() {
             </RowCont>
             <FlatList
               data={paidIncome as IncomeExpend[]}
-              keyExtractor={(item, index) => item?.id + "" ?? index}
+              keyExtractor={(item) => item.id + ""}
               renderItem={({item}: {item: IncomeExpend}) => (
                 <IncomeExpendCard item={item} />
               )}
@@ -134,7 +148,7 @@ export default function Page() {
             </RowCont>
             <FlatList
               data={waitIncome as IncomeExpend[]}
-              keyExtractor={(item, index) => item?.id + "" ?? index}
+              keyExtractor={(item) => item.id + ""}
               renderItem={({item}: {item: IncomeExpend}) => (
                 <IncomeExpendCard item={item} />
               )}
@@ -144,14 +158,13 @@ export default function Page() {
             />
           </>
         )}
+        {createProductModal && (
+          <CreateProductModal inNoutId={inNout?.id + ""} />
+        )}
+        {iNeModal && (
+          <CreateInExModal modal={iNeModal} inNoutId={inNout?.id!} />
+        )}
       </INECont>
-      {createProductModal && (
-        <CreateProductModal
-          modal={createProductModal}
-          inNoutId={inNout?.id + ""}
-        />
-      )}
-      {iNeModal && <CreateInExModal modal={iNeModal} inNoutId={inNout?.id!} />}
     </SharedLayoutCont>
   );
 }

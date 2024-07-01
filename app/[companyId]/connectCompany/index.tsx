@@ -38,7 +38,9 @@ export default function Page() {
         <FlatList
           data={connectedCompany as Company[]}
           keyExtractor={(item) => item.id + ""}
-          renderItem={({item}) => <ConnectCompany item={item} loading />}
+          renderItem={({item}) => (
+            <ConnectCompany item={item} loading={loading} />
+          )}
           ItemSeparatorComponent={() => <FlatSeparator />}
         />
       </ConnectCompanyCont>

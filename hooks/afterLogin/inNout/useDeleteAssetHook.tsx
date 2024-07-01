@@ -78,8 +78,8 @@ export default function useDeleteAssetHook() {
                     },
                   },
                 });
+
                 cache.evict({id: `EquityLiabilities:${id}`});
-                cache.evict({id: `IncomeExpend${data.deleteEnL.subId}`});
                 cache.gc();
               }
             },
@@ -94,5 +94,6 @@ export default function useDeleteAssetHook() {
       },
     ]);
   };
+
   return {handleDeleteEnl, loading, error};
 }

@@ -1,4 +1,4 @@
-import {TPaymentSwitch} from "@/libs/__generated__/graphql";
+import {Product, TPaymentSwitch} from "@/libs/__generated__/graphql";
 
 export interface ILoginProps {
   username?: string;
@@ -110,4 +110,17 @@ export interface IEditSalary {
   preTaxMonthlySalary: number;
   familyCount: number;
   childCount: number;
+}
+
+export interface IEditCompanyAdress {
+  id: number;
+  country: string;
+  city: string;
+  streetAdress: string;
+  restAdress: string;
+  adressNum: string;
+}
+
+export interface IProductProps {
+  item: Product;
 }

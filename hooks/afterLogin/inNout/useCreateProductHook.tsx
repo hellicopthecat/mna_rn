@@ -45,6 +45,7 @@ const CREATE_PRODUCT_MUTATE = gql`
       paymentsDone: $paymentsDone
     ) {
       id
+      subId
       ok
       errorMsg
     }
@@ -52,7 +53,7 @@ const CREATE_PRODUCT_MUTATE = gql`
 ` as DocumentNode | TypedDocumentNode<Mutation>;
 export default function useCreateProductHook() {
   const {companyId} = useGlobalSearchParams<Partial<IRouterParams>>();
-  const {setINEModal} = useModalState();
+  const {setCreateProductModal} = useModalState();
   const [createProduct, {loading, error}] = useMutation(CREATE_PRODUCT_MUTATE);
   const handleCreateProduct = async ({
     inNoutId,
@@ -91,79 +92,153 @@ export default function useCreateProductHook() {
         if (!data.createProduct.ok) {
           Alert.alert("상품설명실패", data.createProduct.errorMsg + "");
         } else {
-          setINEModal();
+          setCreateProductModal();
         }
       },
       update(cache, {data}) {
+        const money =
+          itemCount === 0
+            ? 1 * Number(itemPrice)
+            : Number(itemCount) * Number(itemPrice);
         if (data?.createProduct.ok) {
-          const money =
-            itemCount === 0
-              ? 1 * Number(itemPrice)
-              : Number(itemCount) * Number(itemPrice);
-          const newData = {
+          const newIncomeExpend = {
             __typename: "IncomeExpend",
-            id: data.createProduct.subId,
+            id: Number(data?.createProduct.subId),
             createdAt: Date.now().toString(),
             updateAt: Date.now().toString(),
             incomeTrue,
             infoSubtitle: itemProductId,
             money,
+            businessDate: null,
             paymentType,
             accountCode,
             businessDesc,
             paymentsDone,
+            inNoutId,
           };
-
+          const newProduct = {
+            __typename: "Product",
+            id: Number(data?.createProduct.id),
+            createdAt: Date.now().toString(),
+            updateAt: Date.now().toString(),
+            itemProductId,
+            itemName,
+            itemModelName,
+            itemPhoto,
+            itemType,
+            itemCount,
+            itemPrice,
+            itemDesc,
+            incomeExpendTypeId: Number(data?.createProduct.id),
+            incomeExpend: newIncomeExpend,
+            incomeExpendId: Number(data?.createProduct.id),
+          };
           cache.modify({
             id: `InNout:${inNoutId}`,
             fields: {
-              incomeMoney(prev) {
+              incomeMoney(prev: number) {
                 return incomeTrue && paymentsDone === TPaymentSwitch.Paid
                   ? prev + money
                   : prev;
               },
-              waitIncomeMoney(prev) {
+              waitIncomeMoney(prev: number) {
                 return incomeTrue && paymentsDone === TPaymentSwitch.Wait
                   ? prev + money
                   : prev;
               },
-              expendMoney(prev) {
-                return !incomeTrue && paymentsDone === TPaymentSwitch.Paid
+              expendMoney(prev: number) {
+                return !incomeTrue &&
+                  (paymentsDone === TPaymentSwitch.Paid ||
+                    paymentsDone === TPaymentSwitch.Nonpaid)
                   ? prev + money
                   : prev;
               },
-              waitExpendMoney(prev) {
+              waitExpendMoney(prev: number) {
                 return !incomeTrue && paymentsDone === TPaymentSwitch.Wait
                   ? prev + money
                   : prev;
               },
               incomeModel(prev, {toReference}) {
-                const newModel = toReference(newData, true);
                 return incomeTrue &&
                   (paymentsDone === TPaymentSwitch.Paid ||
                     paymentsDone === TPaymentSwitch.Nonpaid)
-                  ? [newModel, ...prev]
+                  ? [toReference(newIncomeExpend, true), ...prev]
                   : prev;
               },
               waitIncomeModel(prev, {toReference}) {
-                const newModel = toReference(newData, true);
                 return incomeTrue && paymentsDone === TPaymentSwitch.Wait
-                  ? [newModel, ...prev]
+                  ? [toReference(newIncomeExpend, true), ...prev]
                   : prev;
               },
               expendModel(prev, {toReference}) {
-                const newModel = toReference(newData, true);
                 return !incomeTrue &&
                   (paymentsDone === TPaymentSwitch.Paid ||
                     paymentsDone === TPaymentSwitch.Nonpaid)
-                  ? [newModel, ...prev]
+                  ? [toReference(newIncomeExpend, true), ...prev]
                   : prev;
               },
               waitExpendModel(prev, {toReference}) {
-                const newModel = toReference(newData, true);
                 return !incomeTrue && paymentsDone === TPaymentSwitch.Wait
-                  ? [newModel, ...prev]
+                  ? [toReference(newIncomeExpend, true), ...prev]
                   : prev;
+              },
+            },
+          });
+          cache.modify({
+            id: `Prodcut:${data.createProduct.id}`,
+            fields: {
+              __typename() {
+                return "Product";
+              },
+              id() {
+                return Number(data?.createProduct.id);
+              },
+              createdAt() {
+                return Date.now().toString();
+              },
+              updateAt() {
+                return Date.now().toString();
+              },
+              itemProductId() {
+                return itemProductId;
+              },
+              itemName() {
+                return itemName;
+              },
+              itemModelName() {
+                return itemModelName;
+              },
+              itemPhoto() {
+                return itemPhoto;
+              },
+              itemType() {
+                return itemPhoto;
+              },
+              itemCount() {
+                return itemCount;
+              },
+              itemPrice() {
+                return itemPrice;
+              },
+              itemDesc() {
+                return itemDesc;
+              },
+              incomeExpendTypeId() {
+                return Number(data?.createProduct.id);
+              },
+              incomeExpend() {
+                return newIncomeExpend;
+              },
+              incomeExpendId() {
+                return Number(data?.createProduct.id);
+              },
+            },
+          });
+          cache.modify({
+            id: `ROOT_QUERY`,
+            fields: {
+              companyProduct(prev, {toReference}) {
+                return [...prev, toReference(newProduct, true)];
               },
             },
           });
@@ -171,5 +246,6 @@ export default function useCreateProductHook() {
       },
     });
   };
+
   return {handleCreateProduct, loading, error};
 }

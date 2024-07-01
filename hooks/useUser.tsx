@@ -20,7 +20,7 @@ const EXISTS_USER_QUERY = gql`
 
 export default function useUser() {
   const {token, removeToken} = userToken();
-  const {data, loading, error} = useQuery(EXISTS_USER_QUERY, {
+  const {data, loading, error, client} = useQuery(EXISTS_USER_QUERY, {
     skip: !token,
   });
   useEffect(() => {
@@ -30,5 +30,5 @@ export default function useUser() {
     }
   }, [token, error]);
 
-  return {data, loading, error};
+  return {data, loading, error, client};
 }
