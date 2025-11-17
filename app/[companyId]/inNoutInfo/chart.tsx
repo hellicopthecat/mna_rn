@@ -151,7 +151,7 @@ export default function Page() {
           <ChartHeader>
             <SharedTxt text="자산 차트" size="30px" bold={700} />
           </ChartHeader>
-          {/* <ChartScroll
+          <ChartScroll
             contentContainerStyle={{
               alignItems: "center",
               gap: 20,
@@ -256,7 +256,7 @@ export default function Page() {
                 />
               </ChartView>
             </ChartViewCont>
-          </ChartScroll> */}
+          </ChartScroll>
         </ChartCont>
       </SafeAreaView>
     </SharedLayoutCont>

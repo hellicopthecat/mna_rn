@@ -48,3 +48,190 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+```
+mna_rn
+├─ README.md
+├─ app
+│  ├─ (afterLogin)
+│  │  ├─ _layout.tsx
+│  │  ├─ myCompany.tsx
+│  │  └─ mypage.tsx
+│  ├─ (beforeLogin)
+│  │  ├─ _layout.tsx
+│  │  ├─ index.tsx
+│  │  └─ join.tsx
+│  ├─ +html.tsx
+│  ├─ +not-found.tsx
+│  ├─ [companyId]
+│  │  ├─ _layout.tsx
+│  │  ├─ companyHome
+│  │  │  ├─ _layout.tsx
+│  │  │  └─ index.tsx
+│  │  ├─ connectCompany
+│  │  │  ├─ _layout.tsx
+│  │  │  ├─ connectingCompany.tsx
+│  │  │  └─ index.tsx
+│  │  ├─ inNoutInfo
+│  │  │  ├─ _layout.tsx
+│  │  │  ├─ assets.tsx
+│  │  │  ├─ chart.tsx
+│  │  │  ├─ expendModel.tsx
+│  │  │  ├─ incomeModel.tsx
+│  │  │  ├─ index.tsx
+│  │  │  └─ liability.tsx
+│  │  ├─ products
+│  │  │  ├─ _layout.tsx
+│  │  │  └─ index.tsx
+│  │  ├─ searchCompany
+│  │  │  ├─ _layout.tsx
+│  │  │  └─ index.tsx
+│  │  └─ workers
+│  │     ├─ _layout.tsx
+│  │     └─ index.tsx
+│  └─ _layout.tsx
+├─ app.json
+├─ assets
+│  ├─ fonts
+│  │  └─ SpaceMono-Regular.ttf
+│  └─ images
+│     ├─ adaptive-icon.png
+│     ├─ favicon.png
+│     ├─ icon.png
+│     ├─ partial-react-logo.png
+│     ├─ react-logo.png
+│     ├─ react-logo@2x.png
+│     ├─ react-logo@3x.png
+│     └─ splash.png
+├─ babel.config.js
+├─ codegen.ts
+├─ components
+│  ├─ afterLogin
+│  │  ├─ companyHome
+│  │  │  ├─ companyHome.style.ts
+│  │  │  └─ editAdressModal
+│  │  │     └─ editAdressModal.tsx
+│  │  ├─ connectCompany
+│  │  │  ├─ connectCompany.style.ts
+│  │  │  └─ connectCompany.tsx
+│  │  ├─ inNoutInfo
+│  │  │  ├─ detailInNout
+│  │  │  │  ├─ AssetCard.tsx
+│  │  │  │  ├─ AssetCardCont.style.ts
+│  │  │  │  ├─ AssetCardModal.tsx
+│  │  │  │  ├─ createAssetModal
+│  │  │  │  │  └─ createAssetModal.tsx
+│  │  │  │  ├─ createInExModal.tsx
+│  │  │  │  ├─ createProductModal
+│  │  │  │  │  └─ createProductModal.tsx
+│  │  │  │  ├─ detailINEModal
+│  │  │  │  │  └─ detailINEModal.tsx
+│  │  │  │  ├─ incomeExpendCard.style.ts
+│  │  │  │  └─ incomeExpendCard.tsx
+│  │  │  └─ inNoutInfo.style.ts
+│  │  ├─ myCompany
+│  │  │  └─ myCompany.style.ts
+│  │  ├─ productInfo
+│  │  │  ├─ ProductCard.tsx
+│  │  │  ├─ editProductModal
+│  │  │  │  ├─ afterEditProduct.tsx
+│  │  │  │  ├─ beforeEditProduct.tsx
+│  │  │  │  └─ editProductModal.tsx
+│  │  │  └─ productInfo.style.ts
+│  │  ├─ searchCompany
+│  │  │  └─ searchCompany.styled.ts
+│  │  └─ workerInfo
+│  │     ├─ detailWorker
+│  │     │  ├─ createSalary
+│  │     │  │  ├─ createSalary.style.ts
+│  │     │  │  └─ createSalary.tsx
+│  │     │  ├─ createVacation
+│  │     │  │  └─ createVacation.tsx
+│  │     │  ├─ detailWorker.style.ts
+│  │     │  ├─ detailWorker.tsx
+│  │     │  ├─ salaryInfo
+│  │     │  │  ├─ salaryInfo.tsx
+│  │     │  │  └─ salaryModal
+│  │     │  │     └─ salaryModal.tsx
+│  │     │  └─ vacationInfo
+│  │     │     ├─ vacationInfo.tsx
+│  │     │     └─ vacationModal
+│  │     │        └─ vacationModal.tsx
+│  │     ├─ registWorker
+│  │     │  └─ registWorker.tsx
+│  │     ├─ workerInfoCard.style.ts
+│  │     └─ workerInforCard.tsx
+│  └─ shared
+│     ├─ Avatar.tsx
+│     ├─ FlatSeparator.tsx
+│     ├─ InputErrorMsg.tsx
+│     ├─ RowCont.tsx
+│     ├─ SharedBtn.tsx
+│     ├─ SharedInput.tsx
+│     ├─ SharedLayoutCont.tsx
+│     └─ SharedTxt.tsx
+├─ constants
+│  ├─ Colors.ts
+│  ├─ constansts.ts
+│  └─ salaryCalculator.ts
+├─ hooks
+│  ├─ afterLogin
+│  │  ├─ companyAdress
+│  │  │  └─ useEditCompanyAdressHook.tsx
+│  │  ├─ connectCompany
+│  │  │  ├─ useConnectCompany.tsx
+│  │  │  └─ useDisconnectCompany.tsx
+│  │  ├─ inNout
+│  │  │  ├─ useCreateAssetHook.tsx
+│  │  │  ├─ useCreateInExHook.tsx
+│  │  │  ├─ useCreateProductHook.tsx
+│  │  │  ├─ useDeleteAssetHook.tsx
+│  │  │  ├─ useDeleteInExHook.tsx
+│  │  │  └─ useEditAssetHook.tsx
+│  │  ├─ product
+│  │  │  ├─ useDeleteProductHook.tsx
+│  │  │  └─ useEditProductHook.tsx
+│  │  ├─ useCreateCompanyHook.tsx
+│  │  ├─ useDeleteCompanyHook.tsx
+│  │  ├─ useEditUserHook.tsx
+│  │  └─ worker
+│  │     ├─ useCreateSalary.tsx
+│  │     ├─ useCreateVacation.tsx
+│  │     ├─ useEditSalary.tsx
+│  │     ├─ useEditVacation.tsx
+│  │     └─ useRegistWorker.tsx
+│  ├─ beforeLogin
+│  │  ├─ useJoinHook.tsx
+│  │  └─ useLoginHook.tsx
+│  └─ useUser.tsx
+├─ libs
+│  ├─ __generated__
+│  │  ├─ fragment-masking.ts
+│  │  ├─ gql.ts
+│  │  ├─ graphql.ts
+│  │  └─ index.ts
+│  ├─ apolloClient.ts
+│  └─ fragments
+│     ├─ companyAdressFrag.ts
+│     ├─ companyFrag.ts
+│     ├─ equityLiabilitiesFrag.ts
+│     ├─ inNoutFrag.ts
+│     ├─ incomeExpendFrag.ts
+│     ├─ productFrag.ts
+│     ├─ salaryFrag.ts
+│     ├─ userFrag.ts
+│     └─ vacationFrag.ts
+├─ package-lock.json
+├─ package.json
+├─ scripts
+│  └─ reset-project.js
+├─ store
+│  ├─ modalState.ts
+│  └─ userToken.ts
+├─ styled.d.ts
+├─ tsconfig.json
+└─ types
+   ├─ routerParamsType.ts
+   └─ types.ts
+
+```
